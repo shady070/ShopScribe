@@ -1,7 +1,15 @@
-import React from "react";
+"use client";
 
-// This layout wraps all dashboard pages. You can drop it in app/(dashboard)/layout.tsx
-// It includes the Sidebar and a consistent page structure.
+import React from "react";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+import {
+  LayoutDashboard,
+  Sparkles,
+  History,
+  CreditCard,
+  Settings,
+} from "lucide-react";
 
 export default function DashboardLayout({
   children,
@@ -12,29 +20,30 @@ export default function DashboardLayout({
     <div className="min-h-screen bg-slate-50 text-slate-800">
       <div className="flex">
         <Sidebar />
-        <main className="flex-1 p-6 xl:p-8">
-          {children}
-        </main>
+        <main className="flex-1 p-6 xl:p-8">{children}</main>
       </div>
     </div>
   );
 }
 
 function Sidebar() {
+  const pathname = usePathname();
+
   const nav = [
-    { label: "Dashboard", icon: "📊", href: "/" },
-    { label: "Generate Copy", icon: "✨", href: "/generatecopy" },
-    { label: "History", icon: "🕒", href: "/history" },
-    { label: "Billing & Plan", icon: "💳", href: "/billing" },
-    { label: "Settings", icon: "⚙️", href: "/settings" },
+    { label: "Dashboard", icon: LayoutDashboard, href: "/" },
+    { label: "Generate Copy", icon: Sparkles, href: "/generatecopy" },
+    { label: "History", icon: History, href: "/history" },
+    { label: "Billing & Plan", icon: CreditCard, href: "/billing" },
+    { label: "Settings", icon: Settings, href: "/settings" },
   ];
 
   return (
     <aside className="hidden md:flex h-screen sticky top-0 w-64 flex-col border-r border-slate-200 bg-white/60 backdrop-blur-xl">
+      {/* Logo */}
       <div className="px-5 py-5 border-b border-slate-200">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 bg-indigo-600 rounded-xl grid place-items-center text-white shadow-md">
-            🛍️
+          <div className="rounded-xl shadow-md">
+            <Image width={50} height={50} src={"/logo.png"} alt={"Logo"} />
           </div>
           <div>
             <div className="font-semibold">ShopScribe</div>
@@ -43,17 +52,26 @@ function Sidebar() {
         </div>
       </div>
 
+      {/* Nav */}
       <nav className="flex-1 p-3 space-y-1">
-        {nav.map(({ label, icon, href }) => (
-          <a
-            key={label}
-            href={href}
-            className="w-full flex items-center gap-3 rounded-xl px-3 py-2 text-sm transition hover:bg-slate-100 text-slate-600"
-          >
-            <span>{icon}</span>
-            <span className="flex-1 text-left">{label}</span>
-          </a>
-        ))}
+        {nav.map(({ label, icon: Icon, href }) => {
+          const active = pathname === href;
+          return (
+            <a
+              key={label}
+              href={href}
+              className={`w-full flex items-center gap-3 rounded-full px-3 py-2 text-sm transition 
+                ${
+                  active
+                    ? "bg-[#789ED763]/[0.38] text-slate-800 font-medium"
+                    : "hover:bg-slate-100 text-slate-600"
+                }`}
+            >
+              <Icon size={18} />
+              <span className="flex-1 text-left">{label}</span>
+            </a>
+          );
+        })}
       </nav>
     </aside>
   );
