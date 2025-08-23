@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Bell, Search, Settings, ChevronRight, Copy, Download, FileSpreadsheet, ExternalLink, Sparkles, Package, TrendingUp, CheckCircle2, Clock, ShieldCheck, Activity, Plus, Zap, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -15,7 +17,6 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800">
       <div className="flex">
-        <Sidebar />
         <main className="flex-1 p-6 xl:p-8">
           <TopBar />
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mt-6">
@@ -52,59 +53,6 @@ export default function DashboardPage() {
         </main>
       </div>
     </div>
-  );
-}
-
-function Sidebar() {
-  const nav = [
-    { label: "Dashboard", icon: Activity, active: true },
-    { label: "Generate Copy", icon: Sparkles },
-    { label: "History", icon: Clock },
-    { label: "Billing & Plan", icon: FileSpreadsheet },
-    { label: "Settings", icon: Settings },
-  ];
-
-  return (
-    <aside className="hidden md:flex h-screen sticky top-0 w-64 flex-col border-r border-slate-200 bg-white/60 backdrop-blur-xl">
-      <div className="px-5 py-5 border-b border-slate-200">
-        <div className="flex items-center gap-3">
-          <div className="h-10 w-10 bg-indigo-600 rounded-xl grid place-items-center text-white shadow-md">
-            <ShieldCheck className="h-5 w-5" />
-          </div>
-          <div>
-            <div className="font-semibold">ShopScribe</div>
-            <div className="text-xs text-slate-500">SEO Copy. Simplified.</div>
-          </div>
-        </div>
-      </div>
-
-      <nav className="flex-1 p-3 space-y-1">
-        {nav.map(({ label, icon: Icon, active }) => (
-          <button
-            key={label}
-            className={`w-full flex items-center gap-3 rounded-xl px-3 py-2 text-sm transition hover:bg-slate-100 ${
-              active ? "bg-slate-100 text-slate-900" : "text-slate-600"
-            }`}
-          >
-            <Icon className="h-4 w-4" />
-            <span className="flex-1 text-left">{label}</span>
-          </button>
-        ))}
-      </nav>
-
-      <div className="p-4">
-        <Card className="border-slate-200">
-          <CardContent className="p-4">
-            <div className="text-sm font-medium">Pro Plan</div>
-            <div className="text-xs text-slate-500">Active subscription</div>
-            <div className="mt-3 flex items-center gap-2">
-              <Button className="rounded-2xl" size="sm" variant="secondary">Manage</Button>
-              <Button className="rounded-2xl" size="sm">Upgrade</Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </aside>
   );
 }
 

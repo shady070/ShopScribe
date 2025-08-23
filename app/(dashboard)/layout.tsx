@@ -23,7 +23,7 @@ export default function DashboardLayout({
 function Sidebar() {
   const nav = [
     { label: "Dashboard", icon: "📊", href: "/" },
-    { label: "Generate Copy", icon: "✨", href: "/generate" },
+    { label: "Generate Copy", icon: "✨", href: "/generatecopy" },
     { label: "History", icon: "🕒", href: "/history" },
     { label: "Billing & Plan", icon: "💳", href: "/billing" },
     { label: "Settings", icon: "⚙️", href: "/settings" },
