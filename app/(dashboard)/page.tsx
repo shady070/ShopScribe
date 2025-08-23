@@ -15,7 +15,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function DashboardPage() {
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800">
+    <div className="min-h-screen bg-[#F3F2F7] text-slate-800">
       <div className="flex">
         <main className="flex-1 p-6 xl:p-8">
           <TopBar />
@@ -112,10 +112,10 @@ function QuickGenerate() {
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
-          <Input placeholder="Product Name" className="h-12 rounded-xl bg-slate-100/70 border-slate-200" />
-          <Input placeholder="Target Keywords" className="h-12 rounded-xl bg-slate-100/70 border-slate-200" />
+          <Input placeholder="Product Name" className="h-12 rounded-xl bg-[#789ED763] border-slate-200" />
+          <Input placeholder="Target Keywords" className="h-12 rounded-xl bg-[#789ED763] border-slate-200" />
           <div className="pt-2">
-            <Button className="rounded-xl">Generate</Button>
+            <Button className="rounded-xl bg-[#214D8D] hover:bg-[#214D8D]/70 ">Generate</Button>
           </div>
         </div>
       </CardContent>
@@ -145,6 +145,8 @@ function RecentResults() {
     },
   ];
 
+  const colors = ["#789ED763", "#F1E6B9A6", "#2ED6A326"];
+
   return (
     <Card className="border-slate-200">
       <CardHeader>
@@ -153,7 +155,11 @@ function RecentResults() {
       <CardContent>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {items.map((it, i) => (
-            <ResultCard key={i} {...it} />
+            <ResultCard
+              key={i}
+              {...it}
+              bgColor={colors[i % colors.length]}
+            />
           ))}
         </div>
       </CardContent>
@@ -161,14 +167,30 @@ function RecentResults() {
   );
 }
 
-function ResultCard({ title, excerpt, tone }: { title: string; excerpt: string; tone: string }) {
+// 👇 Notice I included bgColor in destructuring
+function ResultCard({
+  title,
+  excerpt,
+  tone,
+  bgColor,
+}: {
+  title: string;
+  excerpt: string;
+  tone: string;
+  bgColor?: string;
+}) {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+    <div
+      className="rounded-2xl border border-slate-200 p-4 shadow-sm"
+      style={{ backgroundColor: bgColor }}
+    >
       <div className="text-sm font-semibold">{title}</div>
       <p className="mt-2 text-sm text-slate-600 line-clamp-3">{excerpt}</p>
       <div className="mt-4 flex items-center justify-between text-slate-500">
         <div className="flex items-center gap-2 text-xs">
-          <Badge variant="secondary" className="rounded-2xl">{tone}</Badge>
+          <Badge variant="secondary" className="rounded-2xl">
+            {tone}
+          </Badge>
         </div>
         <div className="flex items-center gap-2">
           <IconButton title="Copy">
@@ -185,6 +207,7 @@ function ResultCard({ title, excerpt, tone }: { title: string; excerpt: string; 
     </div>
   );
 }
+
 
 function PlanStatus() {
   return (
@@ -210,14 +233,14 @@ function PlanStatus() {
           <div>
             <div className="text-sm font-medium mb-2">Usage Summary</div>
             <div className="h-2 w-full bg-slate-200 rounded-full">
-              <div className="h-2 bg-indigo-600 rounded-full" style={{ width: "68%" }} />
+              <div className="h-2 bg-[#FFBB54] rounded-full" style={{ width: "68%" }} />
             </div>
             <div className="mt-2 text-xs text-slate-500">Credits: 340 / 500</div>
           </div>
 
           <div className="flex items-center gap-2 pt-2">
-            <Button variant="secondary" className="rounded-2xl">Manage Plan</Button>
-            <Button className="rounded-2xl">Upgrade</Button>
+            <Button variant="secondary" className="rounded-2xl bg-[#FFBB54]">Manage Plan</Button>
+            <Button className="rounded-2xl bg-[#214D8D]">Upgrade</Button>
           </div>
         </div>
       </CardContent>
@@ -251,7 +274,7 @@ function LatestActivity() {
           <ol className="relative border-l border-slate-200 ml-2">
             {items.map((it, i) => (
               <li key={i} className="ml-4 mb-6">
-                <span className="absolute -left-1.5 mt-1 h-3 w-3 rounded-full bg-indigo-600" />
+                <span className="absolute -left-1.5 mt-1 h-3 w-3 rounded-full bg-white border-[3px] border-[#214D8D]" />
                 <div className="text-sm font-medium">{it.title}</div>
                 <div className="text-xs text-slate-500">{it.time}</div>
               </li>

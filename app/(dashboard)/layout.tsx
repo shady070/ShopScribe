@@ -17,11 +17,9 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800">
-      <div className="flex">
-        <Sidebar />
-        <main className="flex-1 p-6 xl:p-8">{children}</main>
-      </div>
+    <div className="bg-[#F3F2F7] text-slate-800 flex">
+      <Sidebar />
+      <main className="flex-1 ml-72 p-6 xl:p-8">{children}</main>
     </div>
   );
 }
@@ -38,15 +36,25 @@ function Sidebar() {
   ];
 
   return (
-    <aside className="hidden md:flex h-screen sticky top-0 w-64 flex-col border-r border-slate-200 bg-white/60 backdrop-blur-xl">
+    <aside
+      className="
+        hidden md:flex 
+        fixed top-6 bottom-6   /* gap from top & bottom */
+        left-6                /* optional gap from left */
+        w-64 flex-col 
+        border-r border-slate-200 
+        bg-white rounded-[20px] 
+        backdrop-blur-xl
+      "
+    >
       {/* Logo */}
       <div className="px-5 py-5 border-b border-slate-200">
         <div className="flex items-center gap-3">
-          <div className="rounded-xl shadow-md">
+          <div className="rounded-xl">
             <Image width={50} height={50} src={"/logo.png"} alt={"Logo"} />
           </div>
           <div>
-            <div className="font-semibold">ShopScribe</div>
+            <div className="font-semibold text-[#214D8D]">ShopScribe</div>
             <div className="text-xs text-slate-500">SEO Copy. Simplified.</div>
           </div>
         </div>
@@ -63,7 +71,7 @@ function Sidebar() {
               className={`w-full flex items-center gap-3 rounded-full px-3 py-2 text-sm transition 
                 ${
                   active
-                    ? "bg-[#789ED763]/[0.38] text-slate-800 font-medium"
+                    ? "bg-[#789ED763] text-[#214D8D] font-medium"
                     : "hover:bg-slate-100 text-slate-600"
                 }`}
             >
