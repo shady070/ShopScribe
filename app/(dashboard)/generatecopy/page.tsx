@@ -1,150 +1,341 @@
 "use client";
 
-import React from "react";
-import { Search, Upload } from "lucide-react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Loader2 } from "lucide-react";
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
-export default function GeneratePage() {
-  return (
-    <div className="min-h-screen bg-slate-50 text-slate-800">
-      <div className="flex">
-        <main className="flex-1 p-6 xl:p-8">
-          <TopBar />
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mt-6">
-            <div className="xl:col-span-2 space-y-6">
-              <ActionTip />
-              <GenerateForm />
-            </div>
-            <div className="xl:col-span-1">
-              <RecentCopies />
-            </div>
-          </div>
-        </main>
-      </div>
-    </div>
-  );
+interface Product {
+  id: string;
+  title: string;
+  status: "not_created" | "generating" | "done" | "failed";
+  updatedAt: string;
 }
 
-
-function TopBar() {
-  return (
-    <div className="flex items-center gap-4">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Generate Copy</h1>
-        <p className="text-sm text-slate-500">
-          Create <span className="font-medium">SEO‑ready</span> product descriptions in seconds.
-        </p>
-      </div>
-      <div className="ml-auto flex items-center gap-3">
-        <div className="relative hidden md:block">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-          <Input className="pl-9 w-64 rounded-2xl" placeholder="Search here..." />
-        </div>
-        <div className="h-9 w-9 rounded-2xl bg-slate-300" />
-      </div>
-    </div>
-  );
+interface Store {
+  id: string;
+  shopDomain: string;
 }
 
-function ActionTip() {
-  return (
-    <Card className="border-slate-200 bg-emerald-50/60">
-      <CardContent className="p-4">
-        <div className="text-sm font-medium">Action tip</div>
-        <p className="text-sm text-slate-600 mt-1">
-          Paste product info or upload CSV for bulk generation.
-        </p>
-      </CardContent>
-    </Card>
+const PAGE_SIZE = 10;
+
+const GeneratePage = () => {
+  const [stores, setStores] = useState<Store[]>([]);
+  const [selectedStore, setSelectedStore] = useState<string>("");
+  const [products, setProducts] = useState<Product[]>([]);
+  const [selected, setSelected] = useState<string[]>([]);
+  const [page, setPage] = useState(1);
+  const [hasNextPage, setHasNextPage] = useState(false);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loadingProducts, setLoadingProducts] = useState<string[]>([]);
+  const [openModal, setOpenModal] = useState(false);
+  const [modalProduct, setModalProduct] = useState<Product | null>(null);
+
+  // 🔹 Token & shop handling
+  const urlParams = new URLSearchParams(
+    typeof window !== "undefined" ? window.location.search : ""
   );
-}
+  const urlToken = urlParams.get("token");
+  const urlShop = urlParams.get("shop");
+  const localToken =
+    typeof window !== "undefined" ? localStorage.getItem("authToken") : null;
+  const token = urlToken || localToken;
 
-function GenerateForm() {
+  useEffect(() => {
+    if (urlToken) localStorage.setItem("authToken", urlToken);
+    if (urlShop) localStorage.setItem("shopDomain", urlShop);
+  }, [urlToken, urlShop]);
+
+  // 🔹 Fetch stores
+  useEffect(() => {
+    if (!token) return;
+
+    fetch("http://localhost:3001/stores", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        const fetchedStores: Store[] = Array.isArray(data)
+          ? data
+          : data?.data?.stores || data?.stores || [];
+        setStores(fetchedStores);
+
+        let activeStore: Store | undefined;
+        if (urlShop) {
+          activeStore = fetchedStores.find((s) => s.shopDomain === urlShop);
+        }
+        if (!activeStore && fetchedStores.length > 0) {
+          activeStore = fetchedStores[0];
+        }
+
+        if (activeStore) {
+          setSelectedStore(activeStore.id);
+          localStorage.setItem("storeId", activeStore.id);
+        }
+      })
+      .catch(() => setStores([]));
+  }, [token, urlShop]);
+
+  // 🔹 Fetch products
+  const fetchProducts = async (page: number) => {
+    if (!token || !selectedStore) return;
+
+    try {
+      const res = await fetch(
+        `http://localhost:3001/products?storeId=${selectedStore}&page=${page}&limit=${PAGE_SIZE}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "X-Store-Id": selectedStore, // ✅ Add storeId header
+          },
+        }
+      );
+      const data = await res.json();
+      setProducts(data.data?.products || []);
+      setHasNextPage(data.data?.hasNextPage || false);
+      setTotalPages(data.data?.totalPages || 1);
+    } catch (err) {
+      console.error(err);
+      setProducts([]);
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts(page);
+  }, [page, token, selectedStore]);
+
+  const toggleSelect = (id: string) => {
+    setSelected((prev) =>
+      prev.includes(id) ? prev.filter((p) => p !== id) : [...prev, id]
+    );
+  };
+
+  const handleGenerate = async () => {
+    if (selected.length === 0) return alert("Select at least one product.");
+    if (!token || !selectedStore)
+      return alert("No auth token or store selected");
+
+    try {
+      setLoadingProducts(selected);
+      setProducts((prev) =>
+        prev.map((p) =>
+          selected.includes(p.id) ? { ...p, status: "generating" } : p
+        )
+      );
+
+      const res = await fetch("http://localhost:3001/generate/batch", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+          "X-Store-Id": selectedStore, // ✅ Added storeId header for guard
+        },
+        body: JSON.stringify({ productIds: selected }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        setProducts((prev) =>
+          prev.map((p) =>
+            selected.includes(p.id) ? { ...p, status: "done" } : p
+          )
+        );
+        setSelected([]);
+      } else {
+        setProducts((prev) =>
+          prev.map((p) =>
+            selected.includes(p.id) ? { ...p, status: "failed" } : p
+          )
+        );
+        alert(data.message || "Generation failed");
+      }
+    } catch (err) {
+      console.error(err);
+      setProducts((prev) =>
+        prev.map((p) =>
+          selected.includes(p.id) ? { ...p, status: "failed" } : p
+        )
+      );
+    } finally {
+      setLoadingProducts([]);
+    }
+  };
+
+  const renderStatus = (status: Product["status"], id: string) => {
+    if (loadingProducts.includes(id) || status === "generating") {
+      return (
+        <span className="flex items-center text-blue-600">
+          <Loader2 className="h-4 w-4 animate-spin mr-1" /> Generating...
+        </span>
+      );
+    }
+    if (status === "done") {
+      return (
+        <span className="px-2 py-1 rounded-full text-xs font-medium bg-green-200 text-green-700">
+          ✅ Created
+        </span>
+      );
+    }
+    if (status === "failed") {
+      return (
+        <span className="px-2 py-1 rounded-full text-xs font-medium bg-red-200 text-red-700">
+          ❌ Failed
+        </span>
+      );
+    }
+    return (
+      <span className="px-2 py-1 rounded-full text-xs font-medium bg-gray-200 text-gray-700">
+        Not Created
+      </span>
+    );
+  };
+
   return (
-    <Card className="border-slate-200">
-      <CardHeader>
-        <CardTitle className="text-lg">Generate Copy</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Input placeholder="Product Name" className="h-12 rounded-xl bg-slate-100/70 border-slate-200" />
-          <Input placeholder="Price" className="h-12 rounded-xl bg-slate-100/70 border-slate-200" />
-          <Input placeholder="Features / Attributes" className="h-12 rounded-xl bg-slate-100/70 border-slate-200" />
-          <Input placeholder="Target Keywords" className="h-12 rounded-xl bg-slate-100/70 border-slate-200" />
+    <div className="p-6 space-y-4">
+      <h1 className="text-2xl font-bold">Bulk Generate</h1>
 
-          <Select>
-            <SelectTrigger className="h-12 rounded-xl bg-slate-100/70 border-slate-200">
-              <SelectValue placeholder="Tone" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="friendly">Friendly</SelectItem>
-              <SelectItem value="professional">Professional</SelectItem>
-              <SelectItem value="luxury">Luxury</SelectItem>
-              <SelectItem value="minimal">Minimal</SelectItem>
-              <SelectItem value="playful">Playful</SelectItem>
-            </SelectContent>
-          </Select>
-
-          <Select>
-            <SelectTrigger className="h-12 rounded-xl bg-slate-100/70 border-slate-200">
-              <SelectValue placeholder="Length" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="short">Short</SelectItem>
-              <SelectItem value="medium">Medium</SelectItem>
-              <SelectItem value="long">Long</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="mt-6 flex items-center gap-3">
-          <Button variant="secondary" className="rounded-xl bg-rose-100 text-rose-600 hover:bg-rose-200">
-            <Upload className="h-4 w-4 mr-2" /> Upload CSV
-          </Button>
-          <Button className="rounded-xl">Generate</Button>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
-
-function RecentCopies() {
-  const items = [
-    "Eco Bamboo Dining Table",
-    "Memory Foam Pillow",
-    "Eco Bamboo Dining Table",
-    "Eco Bamboo Dining Table",
-    "Eco Bamboo Dining Table",
-    "Eco Bamboo Dining Table",
-    "Eco Bamboo Dining Table",
-    "Eco Bamboo Dining Table",
-    "Eco Bamboo Dining Table",
-  ];
-
-  return (
-    <Card className="border-slate-200">
-      <CardHeader>
-        <CardTitle className="text-lg">Recent Copies</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-2">
-          {items.map((item, i) => (
-            <div
-              key={i}
-              className={`px-3 py-2 rounded-xl text-sm cursor-pointer transition ${
-                i === 0
-                  ? "bg-indigo-100 text-indigo-800 font-medium"
-                  : "bg-amber-100 text-amber-800 hover:bg-amber-200"
-              }`}
-            >
-              {item}
-            </div>
+      {/* Store Select */}
+      <Select value={selectedStore} onValueChange={setSelectedStore}>
+        <SelectTrigger>
+          <SelectValue placeholder="Select Store" />
+        </SelectTrigger>
+        <SelectContent>
+          {stores.map((s) => (
+            <SelectItem key={s.id} value={s.id}>
+              {s.shopDomain}
+            </SelectItem>
           ))}
-        </div>
-      </CardContent>
-    </Card>
+        </SelectContent>
+      </Select>
+
+      <Table className="mt-4">
+        <TableHeader>
+          <TableRow>
+            <TableHead></TableHead>
+            <TableHead>Title</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead>Updated On</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {products.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={4} className="text-center py-6">
+                No products found
+              </TableCell>
+            </TableRow>
+          ) : (
+            products.map((p) => (
+              <TableRow key={p.id}>
+                <TableCell>
+                  <Checkbox
+                    checked={selected.includes(p.id)}
+                    onCheckedChange={() => toggleSelect(p.id)}
+                    disabled={loadingProducts.includes(p.id)}
+                  />
+                </TableCell>
+                <TableCell>
+                  <button
+                    className="text-blue-600 underline"
+                    onClick={() => {
+                      setModalProduct(p);
+                      setOpenModal(true);
+                    }}
+                  >
+                    {p.title}
+                  </button>
+                </TableCell>
+                <TableCell>{renderStatus(p.status, p.id)}</TableCell>
+                <TableCell>
+                  {new Date(p.updatedAt).toLocaleString()}
+                </TableCell>
+              </TableRow>
+            ))
+          )}
+        </TableBody>
+      </Table>
+
+      {/* Pagination */}
+      <div className="flex items-center justify-between mt-4">
+        <Button
+          variant="outline"
+          onClick={() => setPage((p) => Math.max(1, p - 1))}
+          disabled={page === 1}
+        >
+          Previous
+        </Button>
+        <span className="text-sm text-gray-600">
+          Page {page} of {totalPages}
+        </span>
+        <Button
+          variant="outline"
+          onClick={() => setPage((p) => p + 1)}
+          disabled={!hasNextPage}
+        >
+          Next
+        </Button>
+      </div>
+
+      {/* Bulk Generate */}
+      <Button
+        onClick={handleGenerate}
+        disabled={selected.length === 0 || loadingProducts.length > 0}
+        className="mt-4"
+      >
+        {loadingProducts.length > 0 ? "Generating..." : "Generate Selected"}
+      </Button>
+
+      {/* 🔹 Modal for product details */}
+      <Dialog open={openModal} onOpenChange={setOpenModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Product Details</DialogTitle>
+          </DialogHeader>
+          {modalProduct ? (
+            <div className="space-y-2">
+              <p>
+                <strong>ID:</strong> {modalProduct.id}
+              </p>
+              <p>
+                <strong>Title:</strong> {modalProduct.title}
+              </p>
+              <p>
+                <strong>Status:</strong> {modalProduct.status}
+              </p>
+              <p>
+                <strong>Updated At:</strong>{" "}
+                {new Date(modalProduct.updatedAt).toLocaleString()}
+              </p>
+            </div>
+          ) : (
+            <p>No product selected.</p>
+          )}
+        </DialogContent>
+      </Dialog>
+    </div>
   );
-}
+};
+
+export default GeneratePage;
