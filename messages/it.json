@@ -1,0 +1,284 @@
+{
+    "dashboard": {
+      "quickGenerate": {
+        "title": "Generazione rapida",
+        "sync": "Sincronizza",
+        "syncTooltip": "Sincronizza i prodotti da Shopify",
+        "labels": {
+          "store": "Negozio",
+          "product": "Prodotto",
+          "keywords": "Parole chiave target (separate da virgola)",
+          "tone": "Tono"
+        },
+        "placeholders": {
+          "chooseStore": "Scegli negozio",
+          "chooseProduct": "Scegli prodotto",
+          "noProducts": "Nessun prodotto",
+          "keywords": "es. tazza termica, acciaio inox"
+        }
+      },
+      "tone": {
+        "neutral": "Neutro",
+        "friendly": "Amichevole",
+        "professional": "Professionale",
+        "persuasive": "Persuasivo"
+      },
+      "buttons": {
+        "generate": "Genera",
+        "generating": "Generazione in corso…",
+        "save": "Salva",
+        "saving": "Salvataggio…",
+        "cancel": "Annulla",
+        "copy": "Copia"
+      },
+      "recent": {
+        "title": "Risultati recenti",
+        "empty": "Ancora nessun risultato.",
+        "noDescription": "Nessuna descrizione AI."
+      },
+      "labels": {
+        "tags": "Tag:"
+      },
+      "tooltips": {
+        "copyDescription": "Copia descrizione"
+      },
+      "activity": {
+        "title": "Attività recenti",
+        "empty": "Nessuna attività recente."
+      },
+      "modal": {
+        "title": "Modifica contenuti prodotto",
+        "labels": {
+          "title": "Titolo",
+          "description": "Descrizione AI",
+          "meta": "Meta descrizione",
+          "tags": "Tag (separati da virgola)",
+          "status": "Stato"
+        },
+        "placeholders": {
+          "description": "Descrizione generata",
+          "meta": "150–160 caratteri, includi la parola chiave principale",
+          "tags": "es. tazza termica, acciaio inox, viaggio",
+          "status": "Seleziona stato"
+        }
+      },
+      "status": {
+        "draft": "Bozza",
+        "active": "Attivo",
+        "published": "Pubblicato"
+      },
+      "alerts": {
+        "selectProduct": "Seleziona un prodotto",
+        "quickSuccess": "Generazione rapida completata!",
+        "quickFail": "Operazione non riuscita: {message}",
+        "updateFail": "Operazione non riuscita: {message}",
+        "productUpdated": "Prodotto aggiornato!",
+        "copied": "Copiato!"
+      },
+      "errors": {
+        "generic": "Qualcosa è andato storto"
+      }
+    },
+    "sidebar": {
+          "billing": "Fatturazione",
+          "contact": "Contatti",
+          "dashboard": "Dashboard",
+          "generateCopy": "Genera contenuti",
+          "settings": "Impostazioni"
+    },
+      "bulk": {
+        "header": { "title": "Generazione in blocco" },
+        "ui": {
+          "loadingStores": "Caricamento negozi…",
+          "selectStore": "Seleziona negozio"
+        },
+        "usage": {
+          "planLabel": "Piano:",
+          "unlimitedUsage": "Utilizzo illimitato",
+          "usageLabel": "Utilizzo",
+          "unlimited": "Illimitato",
+          "usedOf": "{used} / {limit}",
+          "remainingLabel": "Rimanenti: {remaining}",
+          "generatingLanguage": "Lingua di generazione",
+          "storePrefSuffix": "(preferenza del negozio)",
+          "profileDefaultSuffix": "(preferenza del profilo)",
+          "noPlan": "Nessun piano attivo — le azioni potrebbero essere bloccate."
+        },
+        "table": {
+          "title": "Titolo",
+          "status": "Stato",
+          "updatedOn": "Aggiornato il",
+          "noProducts": "Nessun prodotto trovato",
+          "pageOf": "Pagina {page} di {total}"
+        },
+        "status": {
+          "generating": "Generazione...",
+          "created": "Creato",
+          "failed": "Non riuscito",
+          "notCreated": "Non creato"
+        },
+        "buttons": {
+          "previous": "Precedente",
+          "next": "Successivo",
+          "generating": "Generazione…",
+          "generateSelected": "Genera selezionati"
+        },
+        "modal": {
+          "title": "Dettagli prodotto",
+          "fields": {
+            "id": "ID",
+            "title": "Titolo",
+            "status": "Stato",
+            "updatedAt": "Aggiornato il"
+          },
+          "noProduct": "Nessun prodotto selezionato."
+        },
+        "alerts": {
+          "selectAny": "Seleziona almeno un prodotto.",
+          "noStore": "Nessun negozio selezionato",
+          "loadingLang": "Attendere, caricamento preferenze lingua…",
+          "usageCap": "⚠️ Limite di utilizzo raggiunto. Utilizzato: {used}, Limite: {limit}."
+        },
+        "errors": { "generic": "Qualcosa è andato storto" },
+        "lang": {
+          "en": "Inglese",
+          "es": "Spagnolo",
+          "fr": "Francese",
+          "de": "Tedesco",
+          "it": "Italiano",
+          "pt": "Portoghese",
+          "nl": "Olandese"
+        }
+      },
+        "billing": {
+          "header": {
+            "title": "Scegli il tuo piano",
+            "subtitle": "Seleziona il piano adatto al tuo negozio."
+          },
+          "activeStore": "Negozio attivo:",
+          "plans": {
+            "free": {
+              "name": "Free",
+              "price": "$0",
+              "description": "Per test e negozi piccoli",
+              "features": [
+                "Genera fino a 10 prodotti",
+                "Solo un negozio",
+                "Assistenza di base"
+              ]
+            },
+            "basic": {
+              "name": "Basic",
+              "price": "$12 /mese",
+              "description": "Per negozi in crescita",
+              "features": [
+                "Genera fino a 200 prodotti",
+                "Solo un negozio",
+                "Assistenza prioritaria"
+              ]
+            },
+            "pro": {
+              "name": "Pro",
+              "price": "$32 /mese",
+              "description": "Per agenzie e gestori multi-negozio",
+              "features": [
+                "Generazione di prodotti illimitata",
+                "Supporto multi-negozio",
+                "Assistenza premium"
+              ]
+            }
+          },
+          "usage": {
+            "label": "Utilizzo",
+            "unlimited": "Illimitato",
+            "usedOfPct": "{used}/{total} ({pct}%)"
+          },
+          "buttons": {
+            "subscribe": "Sottoscrivi",
+            "active": "Attivo",
+            "processing": "Elaborazione...",
+            "switchPlan": "Cambia piano…",
+            "cancel": "Annulla",
+            "keepCurrent": "Mantieni piano attuale",
+            "cancelAndContinue": "Annulla quello attuale e continua"
+          },
+          "free": {
+            "usedBadge": "Usato ({limit}/{limit})",
+            "usedOnceNote": "Hai già utilizzato il piano Free."
+          },
+          "confirm": {
+            "title": "Cambiare piano?",
+            "body": "Al momento hai {current} attivo. Per passare a {target}, devi prima annullare il piano attuale."
+          },
+          "errors": {
+            "stores": "Caricamento negozi non riuscito",
+            "subscription": "Caricamento abbonamento non riuscito",
+            "cancelFailed": "Annullamento non riuscito",
+            "generic": "Qualcosa è andato storto"
+          },
+          "alerts": {
+            "freeOnce": "Hai già utilizzato il piano Free. Può essere attivato solo una volta nella vita.",
+            "freeActivated": "✅ Piano Free attivato!",
+            "cancelled": "Abbonamento {plan} annullato"
+          }
+        },
+          "settings": {
+            "header": {
+              "title": "Impostazioni"
+            },
+            "profile": {
+              "title": "Profilo",
+              "subtitle": "Gestisci email, avatar e tema.",
+              "avatarAlt": "avatar",
+              "noAvatar": "Nessun avatar",
+              "changeAvatar": "Cambia avatar",
+              "upload": "Carica"
+            },
+            "fields": {
+              "email": "Email",
+              "theme": "Tema",
+              "defaultLanguage": "Lingua predefinita (fallback)"
+            },
+            "theme": {
+              "system": "Sistema",
+              "light": "Chiaro",
+              "dark": "Scuro"
+            },
+            "langs": {
+              "en": "Inglese",
+              "es": "Spagnolo",
+              "fr": "Francese",
+              "de": "Tedesco",
+              "it": "Italiano",
+              "pt": "Portoghese",
+              "nl": "Olandese"
+            },
+            "buttons": {
+              "save": "Salva",
+              "saving": "Salvataggio…"
+            },
+            "stores": {
+              "title": "Lingue del negozio",
+              "empty": "Nessun negozio collegato.",
+              "storeId": "ID negozio"
+            },
+            "placeholders": {
+              "theme": "Scegli tema",
+              "language": "Scegli lingua"
+            },
+            "alerts": {
+              "uploadFailed": "Caricamento non riuscito",
+              "profileSaved": "✅ Profilo salvato",
+              "storeLangFailed": "Salvataggio lingua del negozio non riuscito"
+            },
+            "errors": {
+              "loadProfile": "Caricamento profilo non riuscito",
+              "loadStores": "Caricamento negozi non riuscito",
+              "loadStorePrefs": "Caricamento preferenze negozio non riuscito",
+              "loadSettings": "Caricamento impostazioni non riuscito",
+              "saveFailed": "Salvataggio non riuscito"
+            }
+          }
+        
+  }
+  
