@@ -94,7 +94,7 @@ export default function ContactPage() {
       </header>
 
       {/* Contact Info Cards */}
-      <section className="grid gap-6 md:grid-cols-3 mb-12">
+      {/* <section className="grid gap-6 md:grid-cols-3 mb-12">
         <Card className="rounded-2xl shadow-lg border">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -159,7 +159,7 @@ export default function ContactPage() {
             </div>
           </CardContent>
         </Card>
-      </section>
+      </section> */}
 
       {/* Contact Form */}
       <section className="grid md:grid-cols-2 gap-8 mb-16">
@@ -187,7 +187,7 @@ export default function ContactPage() {
                   <Input
                     id="name"
                     name="name"
-                    placeholder="Ayaan Khan"
+                    placeholder="John Doe"
                     value={form.name}
                     onChange={handleChange}
                     required
@@ -279,7 +279,7 @@ export default function ContactPage() {
       {/* FAQs */}
       <section>
         <h2 className="text-2xl font-semibold mb-4">FAQs</h2>
-        <Accordion type="single" collapsible className="rounded-2xl border shadow-sm">
+        <Accordion type="single" collapsible className="rounded-2xl border shadow-sm p-4">
           <AccordionItem value="q1">
             <AccordionTrigger>How does the FREE plan work?</AccordionTrigger>
             <AccordionContent>
