@@ -5,7 +5,12 @@ import { apiFetch } from "@/lib/api";
 import { useTranslations } from "next-intl";
 
 type PlanValue = "FREE" | "BASIC" | "PRO";
-const FREE_LIMIT = 10;
+
+const PLAN_LIMITS: Record<PlanValue, number> = {
+  FREE: 10,
+  BASIC: 100,
+  PRO: 250,
+};
 
 type SubscriptionDTO = {
   id: string;
@@ -41,8 +46,8 @@ export default function BillingPage() {
   const [subscriptionData, setSubscriptionData] = useState<SubscriptionDTO | null>(null);
   const [usageData, setUsageData] = useState<{
     usageCount: number;
-    limit: number | "∞";
-    remaining: number | "∞";
+    limit: number;
+    remaining: number;
   } | null>(null);
   const [freeEligibleEver, setFreeEligibleEver] = useState<boolean>(true);
 
@@ -68,9 +73,9 @@ export default function BillingPage() {
     return t(`plans.${k}.name`);
   };
 
-  // Build localized plans
+  // Build localized plans (limits reflect backend)
   const plans = useMemo(() => {
-    const raw = (key: string) => (t as any).raw(key) as string[]; // for arrays
+    const raw = (key: string) => (t as any).raw(key) as string[];
     return [
       {
         name: t("plans.free.name"),
@@ -78,7 +83,7 @@ export default function BillingPage() {
         description: t("plans.free.description"),
         features: raw("plans.free.features"),
         value: "FREE" as PlanValue,
-        limit: FREE_LIMIT,
+        limit: PLAN_LIMITS.FREE,
       },
       {
         name: t("plans.basic.name"),
@@ -86,7 +91,7 @@ export default function BillingPage() {
         description: t("plans.basic.description"),
         features: raw("plans.basic.features"),
         value: "BASIC" as PlanValue,
-        limit: 200,
+        limit: PLAN_LIMITS.BASIC,
       },
       {
         name: t("plans.pro.name"),
@@ -94,7 +99,7 @@ export default function BillingPage() {
         description: t("plans.pro.description"),
         features: raw("plans.pro.features"),
         value: "PRO" as PlanValue,
-        limit: Infinity,
+        limit: PLAN_LIMITS.PRO,
       },
     ];
   }, [t]);
@@ -155,22 +160,14 @@ export default function BillingPage() {
 
         if (currentSub) {
           const used = currentSub.usageCount || 0;
-          if (currentSub.plan === "PRO") {
-            setUsageData({ usageCount: used, limit: "∞", remaining: "∞" });
-          } else {
-            const limitNumber =
-              typeof currentSub.limit === "number"
-                ? currentSub.limit
-                : currentSub.plan === "FREE"
-                ? FREE_LIMIT
-                : 0;
-            const remaining = Math.max(0, limitNumber - used);
-            setUsageData({
-              usageCount: used,
-              limit: limitNumber,
-              remaining,
-            });
-          }
+          // Use DB limit if present, else fall back to our known caps
+          const cap =
+            typeof currentSub.limit === "number" && currentSub.limit > 0
+              ? currentSub.limit
+              : PLAN_LIMITS[currentSub.plan];
+
+          const remaining = Math.max(0, cap - used);
+          setUsageData({ usageCount: used, limit: cap, remaining });
         } else {
           setUsageData(null);
         }
@@ -192,20 +189,7 @@ export default function BillingPage() {
     [activePlan]
   );
 
-  const ProgressBar = ({ used, total }: { used: number; total: number | "∞" }) => {
-    if (total === "∞") {
-      return (
-        <div className="mt-2">
-          <div className="flex justify-between text-xs text-gray-600 mb-1">
-            <span>{t("usage.label")}</span>
-            <span>{t("usage.unlimited")}</span>
-          </div>
-          <div className="w-full h-2 rounded-full bg-gray-200 overflow-hidden">
-            <div className="h-2 rounded-full bg-green-500" style={{ width: `100%` }} />
-          </div>
-        </div>
-      );
-    }
+  const ProgressBar = ({ used, total }: { used: number; total: number }) => {
     const pct = total > 0 ? Math.min(100, Math.round((used / total) * 100)) : 0;
     return (
       <div className="mt-2">
@@ -234,22 +218,12 @@ export default function BillingPage() {
 
     if (currentSub) {
       const used = currentSub.usageCount || 0;
-      if (currentSub.plan === "PRO") {
-        setUsageData({ usageCount: used, limit: "∞", remaining: "∞" });
-      } else {
-        const limitNumber =
-          typeof currentSub.limit === "number"
-            ? currentSub.limit
-            : currentSub.plan === "FREE"
-            ? FREE_LIMIT
-            : 0;
-        const remaining = Math.max(0, limitNumber - used);
-        setUsageData({
-          usageCount: used,
-          limit: limitNumber,
-          remaining,
-        });
-      }
+      const cap =
+        typeof currentSub.limit === "number" && currentSub.limit > 0
+          ? currentSub.limit
+          : PLAN_LIMITS[currentSub.plan];
+      const remaining = Math.max(0, cap - used);
+      setUsageData({ usageCount: used, limit: cap, remaining });
     } else {
       setUsageData(null);
     }
@@ -351,7 +325,6 @@ export default function BillingPage() {
       <h1 className="text-4xl font-bold text-center mb-4">{t("header.title")}</h1>
       <p className="text-center text-gray-500 mb-6">{t("header.subtitle")}</p>
 
-      {/* Optional: quick store indicator */}
       {stores.length > 1 && (
         <p className="text-center text-sm text-gray-500 mb-8">
           {t("activeStore")}{" "}
@@ -373,13 +346,10 @@ export default function BillingPage() {
             const isActive = activePlan === plan.value;
             const isPaid = plan.value !== "FREE";
 
-            // Active plan usage (FREE/BASIC/PRO)
+            // Active plan usage
             const activeUsage =
               isActive && usageData
-                ? {
-                    used: usageData.usageCount,
-                    total: plan.value === "PRO" ? ("∞" as const) : (usageData.limit as number | "∞"),
-                  }
+                ? { used: usageData.usageCount, total: usageData.limit }
                 : null;
 
             // Only show the “Free plan already used (10/10)” banner when FREE is NOT active
@@ -390,7 +360,7 @@ export default function BillingPage() {
             let disabled = !!loading;
 
             if (freeUsedForever) {
-              buttonText = t("free.usedBadge", { limit: FREE_LIMIT });
+              buttonText = t("free.usedBadge", { limit: PLAN_LIMITS.FREE });
               disabled = true;
             } else if (isActive) {
               buttonText = t("buttons.active");
@@ -426,7 +396,6 @@ export default function BillingPage() {
                     ))}
                   </ul>
 
-                  {/* Active plan progress (FREE/BASIC/PRO) */}
                   {activeUsage && <ProgressBar used={activeUsage.used} total={activeUsage.total} />}
 
                   {/* FREE lifetime used: full 10/10 bar (only when FREE is NOT active) */}
@@ -434,7 +403,13 @@ export default function BillingPage() {
                     <div className="mt-2">
                       <div className="flex justify-between text-xs text-gray-600 mb-1">
                         <span>{t("usage.label")}</span>
-                        <span>{t("usage.usedOfPct", { used: FREE_LIMIT, total: FREE_LIMIT, pct: 100 })}</span>
+                        <span>
+                          {t("usage.usedOfPct", {
+                            used: PLAN_LIMITS.FREE,
+                            total: PLAN_LIMITS.FREE,
+                            pct: 100,
+                          })}
+                        </span>
                       </div>
                       <div className="w-full h-2 rounded-full bg-gray-200 overflow-hidden">
                         <div className="h-2 rounded-full bg-gray-500" style={{ width: `100%` }} />
