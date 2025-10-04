@@ -33,9 +33,9 @@ function Sidebar() {
   const nav: Array<{ label: string; href: string; icon: React.ElementType }> = [
     { label: t("dashboard"),    href: "/",             icon: LayoutDashboard },
     { label: t("generateCopy"), href: "/generatecopy", icon: Sparkles },
-    { label: t("contact"),      href: "/contact",      icon: History },
     { label: t("billing"),      href: "/billing",      icon: CreditCard },
     { label: t("settings"),     href: "/settings",     icon: Settings },
+    { label: t("contact"),      href: "/contact",      icon: History },
   ];
 
   return (
