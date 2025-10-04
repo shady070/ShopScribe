@@ -86,198 +86,197 @@
     "generateCopy": "Generate Copy",
     "settings": "Settings"
   },
-    "bulk": {
-      "header": { "title": "Bulk Generate" },
-      "ui": {
-        "loadingStores": "Loading stores...",
-        "selectStore": "Select Store"
-      },
-      "usage": {
-        "planLabel": "Plan:",
-        "unlimitedUsage": "Unlimited usage",
-        "usageLabel": "Usage",
-        "unlimited": "Unlimited",
-        "usedOf": "{used} / {limit}",
-        "remainingLabel": "Remaining: {remaining}",
-        "generatingLanguage": "Generating language",
-        "storePrefSuffix": "(store preference)",
-        "profileDefaultSuffix": "(profile default)",
-        "noPlan": "No active plan — actions may be blocked."
-      },
-      "table": {
+  "bulk": {
+    "header": { "title": "Bulk Generate" },
+    "ui": {
+      "loadingStores": "Loading stores...",
+      "selectStore": "Select Store"
+    },
+    "usage": {
+      "planLabel": "Plan:",
+      "unlimitedUsage": "Unlimited usage",
+      "usageLabel": "Usage",
+      "unlimited": "Unlimited",
+      "usedOf": "{used} / {limit}",
+      "remainingLabel": "Remaining: {remaining}",
+      "generatingLanguage": "Generating language",
+      "storePrefSuffix": "(store preference)",
+      "profileDefaultSuffix": "(profile default)",
+      "noPlan": "No active plan — actions may be blocked."
+    },
+    "table": {
+      "title": "Title",
+      "status": "Status",
+      "updatedOn": "Updated On",
+      "noProducts": "No products found",
+      "pageOf": "Page {page} of {total}"
+    },
+    "status": {
+      "generating": "Generating...",
+      "created": "Created",
+      "failed": "Failed",
+      "notCreated": "Not Created"
+    },
+    "buttons": {
+      "previous": "Previous",
+      "next": "Next",
+      "generating": "Generating…",
+      "generateSelected": "Generate Selected"
+    },
+    "modal": {
+      "title": "Product Details",
+      "fields": {
+        "id": "ID",
         "title": "Title",
         "status": "Status",
-        "updatedOn": "Updated On",
-        "noProducts": "No products found",
-        "pageOf": "Page {page} of {total}"
+        "updatedAt": "Updated At"
       },
-      "status": {
-        "generating": "Generating...",
-        "created": "Created",
-        "failed": "Failed",
-        "notCreated": "Not Created"
+      "noProduct": "No product selected."
+    },
+    "alerts": {
+      "selectAny": "Select at least one product.",
+      "noStore": "No store selected",
+      "loadingLang": "Please wait, loading language preferences…",
+      "usageCap": "⚠️ Usage limit reached. Used: {used}, Limit: {limit}."
+    },
+    "errors": { "generic": "Something went wrong" },
+    "lang": {
+      "en": "English",
+      "es": "Spanish",
+      "fr": "French",
+      "de": "German",
+      "it": "Italian",
+      "pt": "Portuguese",
+      "nl": "Dutch"
+    }
+  },
+  "billing": {
+    "header": {
+      "title": "Choose Your Plan",
+      "subtitle": "Select the plan that fits your store’s needs."
+    },
+    "activeStore": "Active store:",
+    "plans": {
+      "free": {
+        "name": "Free",
+        "price": "$0",
+        "description": "For testing and small stores",
+        "features": [
+          "Generate up to 10 products",
+          "Single store only",
+          "Basic support"
+        ]
       },
-      "buttons": {
-        "previous": "Previous",
-        "next": "Next",
-        "generating": "Generating…",
-        "generateSelected": "Generate Selected"
+      "basic": {
+        "name": "Basic",
+        "price": "$12 /mo",
+        "description": "For growing stores",
+        "features": [
+          "Generate up to 100 products",
+          "Single store only",
+          "Priority support"
+        ]
       },
-      "modal": {
-        "title": "Product Details",
-        "fields": {
-          "id": "ID",
-          "title": "Title",
-          "status": "Status",
-          "updatedAt": "Updated At"
-        },
-        "noProduct": "No product selected."
-      },
-      "alerts": {
-        "selectAny": "Select at least one product.",
-        "noStore": "No store selected",
-        "loadingLang": "Please wait, loading language preferences…",
-        "usageCap": "⚠️ Usage limit reached. Used: {used}, Limit: {limit}."
-      },
-      "errors": { "generic": "Something went wrong" },
-      "lang": {
-        "en": "English",
-        "es": "Spanish",
-        "fr": "French",
-        "de": "German",
-        "it": "Italian",
-        "pt": "Portuguese",
-        "nl": "Dutch"
+      "pro": {
+        "name": "Pro",
+        "price": "$32 /mo",
+        "description": "For agencies & multi-store owners",
+        "features": [
+          "Generate up to 250 products",
+          "Multi-store support",
+          "Premium support"
+        ]
       }
     },
-      "billing": {
-        "header": {
-          "title": "Choose Your Plan",
-          "subtitle": "Select the plan that fits your store’s needs."
-        },
-        "activeStore": "Active store:",
-        "plans": {
-          "free": {
-            "name": "Free",
-            "price": "$0",
-            "description": "For testing and small stores",
-            "features": [
-              "Generate up to 10 products",
-              "Single store only",
-              "Basic support"
-            ]
-          },
-          "basic": {
-            "name": "Basic",
-            "price": "$12 /mo",
-            "description": "For growing stores",
-            "features": [
-              "Generate up to 200 products",
-              "Single store only",
-              "Priority support"
-            ]
-          },
-          "pro": {
-            "name": "Pro",
-            "price": "$32 /mo",
-            "description": "For agencies & multi-store owners",
-            "features": [
-              "Unlimited product generation",
-              "Multi-store support",
-              "Premium support"
-            ]
-          }
-        },
-        "usage": {
-          "label": "Usage",
-          "unlimited": "Unlimited",
-          "usedOfPct": "{used}/{total} ({pct}%)"
-        },
-        "buttons": {
-          "subscribe": "Subscribe",
-          "active": "Active",
-          "processing": "Processing...",
-          "switchPlan": "Switch plan…",
-          "cancel": "Cancel",
-          "keepCurrent": "Keep current plan",
-          "cancelAndContinue": "Cancel current & continue"
-        },
-        "free": {
-          "usedBadge": "Used ({limit}/{limit})",
-          "usedOnceNote": "You’ve already used the Free plan."
-        },
-        "confirm": {
-          "title": "Switch plans?",
-          "body": "You currently have {current} active. To move to {target}, you must cancel your current plan first."
-        },
-        "errors": {
-          "stores": "Failed to load stores",
-          "subscription": "Failed to load subscription",
-          "cancelFailed": "Cancel failed",
-          "generic": "Something went wrong"
-        },
-        "alerts": {
-          "freeOnce": "You’ve already used the Free plan. It can only be activated once per lifetime.",
-          "freeActivated": "✅ Free plan activated!",
-          "cancelled": "{plan} subscription canceled"
-        }
-      },
-        "settings": {
-          "header": {
-            "title": "Settings"
-          },
-          "profile": {
-            "title": "Profile",
-            "subtitle": "Manage your email, avatar, and theme.",
-            "avatarAlt": "avatar",
-            "noAvatar": "No avatar",
-            "changeAvatar": "Change avatar",
-            "upload": "Upload"
-          },
-          "fields": {
-            "email": "Email",
-            "theme": "Theme",
-            "defaultLanguage": "Default language (fallback)"
-          },
-          "theme": {
-            "system": "System",
-            "light": "Light",
-            "dark": "Dark"
-          },
-          "langs": {
-            "en": "English",
-            "es": "Spanish",
-            "fr": "French",
-            "de": "German",
-            "it": "Italian",
-            "pt": "Portuguese",
-            "nl": "Dutch"
-          },
-          "buttons": {
-            "save": "Save",
-            "saving": "Saving…"
-          },
-          "stores": {
-            "title": "Store languages",
-            "empty": "No stores connected.",
-            "storeId": "Store ID"
-          },
-          "placeholders": {
-            "theme": "Choose theme",
-            "language": "Choose language"
-          },
-          "alerts": {
-            "uploadFailed": "Upload failed",
-            "profileSaved": "✅ Profile saved",
-            "storeLangFailed": "Failed to save store language"
-          },
-          "errors": {
-            "loadProfile": "Failed to load profile",
-            "loadStores": "Failed to load stores",
-            "loadStorePrefs": "Failed to load store preferences",
-            "loadSettings": "Failed to load settings",
-            "saveFailed": "Save failed"
-          }
-        }      
+    "usage": {
+      "label": "Usage",
+      "unlimited": "Unlimited",
+      "usedOfPct": "{used}/{total} ({pct}%)"
+    },
+    "buttons": {
+      "subscribe": "Subscribe",
+      "active": "Active",
+      "processing": "Processing...",
+      "switchPlan": "Switch plan…",
+      "cancel": "Cancel",
+      "keepCurrent": "Keep current plan",
+      "cancelAndContinue": "Cancel current & continue"
+    },
+    "free": {
+      "usedBadge": "Used ({limit}/{limit})",
+      "usedOnceNote": "You’ve already used the Free plan."
+    },
+    "confirm": {
+      "title": "Switch plans?",
+      "body": "You currently have {current} active. To move to {target}, you must cancel your current plan first."
+    },
+    "errors": {
+      "stores": "Failed to load stores",
+      "subscription": "Failed to load subscription",
+      "cancelFailed": "Cancel failed",
+      "generic": "Something went wrong"
+    },
+    "alerts": {
+      "freeOnce": "You’ve already used the Free plan. It can only be activated once per lifetime.",
+      "freeActivated": "✅ Free plan activated!",
+      "cancelled": "{plan} subscription canceled"
+    }
+  },
+  "settings": {
+    "header": {
+      "title": "Settings"
+    },
+    "profile": {
+      "title": "Profile",
+      "subtitle": "Manage your email, avatar, and theme.",
+      "avatarAlt": "avatar",
+      "noAvatar": "No avatar",
+      "changeAvatar": "Change avatar",
+      "upload": "Upload"
+    },
+    "fields": {
+      "email": "Email",
+      "theme": "Theme",
+      "defaultLanguage": "Default language (fallback)"
+    },
+    "theme": {
+      "system": "System",
+      "light": "Light",
+      "dark": "Dark"
+    },
+    "langs": {
+      "en": "English",
+      "es": "Spanish",
+      "fr": "French",
+      "de": "German",
+      "it": "Italian",
+      "pt": "Portuguese",
+      "nl": "Dutch"
+    },
+    "buttons": {
+      "save": "Save",
+      "saving": "Saving…"
+    },
+    "stores": {
+      "title": "Store languages",
+      "empty": "No stores connected.",
+      "storeId": "Store ID"
+    },
+    "placeholders": {
+      "theme": "Choose theme",
+      "language": "Choose language"
+    },
+    "alerts": {
+      "uploadFailed": "Upload failed",
+      "profileSaved": "✅ Profile saved",
+      "storeLangFailed": "Failed to save store language"
+    },
+    "errors": {
+      "loadProfile": "Failed to load profile",
+      "loadStores": "Failed to load stores",
+      "loadStorePrefs": "Failed to load store preferences",
+      "loadSettings": "Failed to load settings",
+      "saveFailed": "Save failed"
+    }
   }
-
+}

@@ -171,21 +171,21 @@
             "name": "Basic",
             "price": "$12 /mois",
             "description": "Pour les boutiques en croissance",
-            "features": [
-              "Générez jusqu’à 200 produits",
-              "Une seule boutique",
-              "Assistance prioritaire"
-            ]
+        "features": [
+          "Générez jusqu’à 100 produits",
+          "Une seule boutique",
+          "Assistance prioritaire"
+        ]
           },
           "pro": {
             "name": "Pro",
             "price": "$32 /mois",
             "description": "Pour les agences et les multi-boutiques",
-            "features": [
-              "Génération de produits illimitée",
-              "Support multi-boutiques",
-              "Assistance premium"
-            ]
+        "features": [
+          "Générez jusqu’à 250 produits",
+          "Support multi-boutiques",
+          "Assistance premium"
+        ]
           }
         },
         "usage": {

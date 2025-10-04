@@ -20,11 +20,8 @@ import {
   CardContent,
 } from "@/components/ui/card";
 
-const SUPPORT_EMAIL = "support@yourapp.com";
-const SALES_EMAIL   = "sales@yourapp.com";
-const BILLING_EMAIL = "billing@yourapp.com";
 const PHONE_NUMBER  = "+92 300 1234567";
-const WHATSAPP_LINK = "https://wa.me/923001234567"; // change to your official WA
+const WHATSAPP_LINK = "https://wa.me/923001234567";
 const OFFICE_ADDR   = "2nd Floor, Example Plaza, Clifton, Karachi, Pakistan";
 const MAPS_LINK     = "https://maps.google.com/?q=Clifton+Karachi+Pakistan";
 const HOURS_TEXT    = "Mon–Fri, 9:00–18:00 PKT";
@@ -48,9 +45,8 @@ export default function ContactPage() {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  // Opens user's email client with prefilled subject/body.
-  // If you later add a backend endpoint (e.g. /api/contact), you can POST instead.
-  const handleSubmit = (e: React.FormEvent) => {
+  // Send to /api/contact (Resend on the server)
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isValid) {
       setNotice({ type: "error", text: "Please fill in your name, a valid email, and a message." });
@@ -59,33 +55,36 @@ export default function ContactPage() {
     setSubmitting(true);
     setNotice(null);
 
-    const subject = encodeURIComponent(`[${form.topic}] Contact from ${form.name}`);
-    const body = encodeURIComponent(
-      [
-        `Name: ${form.name}`,
-        `Email: ${form.email}`,
-        form.storeDomain ? `Store: ${form.storeDomain}` : undefined,
-        `Topic: ${form.topic}`,
-        "",
-        form.message,
-      ].filter(Boolean).join("\n")
-    );
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          topic: form.topic,
+          message: form.message,
+          storeDomain: form.storeDomain || null,
+        }),
+      });
 
-    // Prefer support inbox by default
-    const mailto = `mailto:${SUPPORT_EMAIL}?subject=${subject}&body=${body}`;
-    window.location.href = mailto;
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data?.success) {
+        throw new Error(data?.error || "Failed to send message.");
+      }
 
-    // Light UX: show a success notice
-    setTimeout(() => {
-      setSubmitting(false);
-      setNotice({ type: "success", text: "Your email draft is ready. Send it from your email client — we’ll reply ASAP." });
+      setNotice({ type: "success", text: "✅ Your message has been sent successfully! We’ll reply ASAP." });
       setForm({ name: "", email: "", topic: "General", message: "", storeDomain: "" });
-    }, 600);
+    } catch (err: any) {
+      setNotice({ type: "error", text: err?.message || "Something went wrong sending your message." });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <div className="max-w-6xl mx-auto py-16 px-6">
-      {/* Page Header */}
+      {/* Header */}
       <header className="text-center mb-12">
         <h1 className="text-4xl font-bold">Contact Us</h1>
         <p className="text-gray-500 mt-2">
@@ -93,75 +92,7 @@ export default function ContactPage() {
         </p>
       </header>
 
-      {/* Contact Info Cards */}
-      {/* <section className="grid gap-6 md:grid-cols-3 mb-12">
-        <Card className="rounded-2xl shadow-lg border">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Mail className="h-5 w-5" /> Email
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3 text-sm">
-            <div className="flex items-center gap-2">
-              <span className="font-medium w-16">Support</span>
-              <a className="text-blue-600 underline break-all" href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="font-medium w-16">Sales</span>
-              <a className="text-blue-600 underline break-all" href={`mailto:${SALES_EMAIL}`}>{SALES_EMAIL}</a>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="font-medium w-16">Billing</span>
-              <a className="text-blue-600 underline break-all" href={`mailto:${BILLING_EMAIL}`}>{BILLING_EMAIL}</a>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="rounded-2xl shadow-lg border">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Phone className="h-5 w-5" /> Call / WhatsApp
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3 text-sm">
-            <div className="flex items-center gap-2">
-              <span className="font-medium w-24">Phone</span>
-              <a className="text-blue-600 underline" href={`tel:${PHONE_NUMBER.replace(/\s/g, "")}`}>{PHONE_NUMBER}</a>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="font-medium w-24">WhatsApp</span>
-              <a className="text-blue-600 underline" href={WHATSAPP_LINK} target="_blank" rel="noreferrer">
-                Message us
-              </a>
-            </div>
-            <div className="flex items-center gap-2">
-              <Clock className="h-4 w-4 text-gray-500" />
-              <span>{HOURS_TEXT}</span>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="rounded-2xl shadow-lg border">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Building2 className="h-5 w-5" /> Office
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3 text-sm">
-            <div className="flex items-start gap-2">
-              <MapPin className="h-4 w-4 mt-0.5 text-gray-500" />
-              <div>
-                <div>{OFFICE_ADDR}</div>
-                <a className="text-blue-600 underline" href={MAPS_LINK} target="_blank" rel="noreferrer">
-                  Open in Maps
-                </a>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </section> */}
-
-      {/* Contact Form */}
+      {/* Form + Quick answers */}
       <section className="grid md:grid-cols-2 gap-8 mb-16">
         <Card className="rounded-2xl shadow-lg border">
           <CardHeader>
@@ -248,14 +179,13 @@ export default function ContactPage() {
                   By contacting us, you agree to be contacted regarding your request.
                 </p>
                 <Button type="submit" disabled={submitting || !isValid} className="rounded-xl">
-                  <Send className="h-4 w-4 mr-2" /> {submitting ? "Opening…" : "Send"}
+                  <Send className="h-4 w-4 mr-2" /> {submitting ? "Sending…" : "Send"}
                 </Button>
               </div>
             </form>
           </CardContent>
         </Card>
 
-        {/* Helpful quick answers card */}
         <Card className="rounded-2xl shadow-lg border">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -270,7 +200,7 @@ export default function ContactPage() {
             <ul className="list-disc pl-5 space-y-1 text-gray-700">
               <li>FREE plan is a one-time trial with 10 generations total.</li>
               <li>You can switch plans after cancelling the current one.</li>
-              <li>PRO offers unlimited usage; BASIC includes 200 generations.</li>
+              <li>PRO offers up to 250 generations; BASIC includes 100 generations.</li>
             </ul>
           </CardContent>
         </Card>
@@ -283,43 +213,28 @@ export default function ContactPage() {
           <AccordionItem value="q1">
             <AccordionTrigger>How does the FREE plan work?</AccordionTrigger>
             <AccordionContent>
-              The FREE plan gives you a one-time quota of 10 generations. It’s meant to try the app risk-free.
-              Once used, it can’t be reactivated again.
+              The FREE plan gives you a one-time quota of 10 generations. Once used, it can’t be reactivated again.
             </AccordionContent>
           </AccordionItem>
 
           <AccordionItem value="q2">
             <AccordionTrigger>Can I switch from BASIC to PRO (or vice versa)?</AccordionTrigger>
             <AccordionContent>
-              Yes — first cancel your current plan from Billing, then subscribe to the other plan. We’ll warn you before switching to avoid accidental changes.
+              Yes — first cancel your current plan from Billing, then subscribe to the other plan.
             </AccordionContent>
           </AccordionItem>
 
           <AccordionItem value="q3">
             <AccordionTrigger>What are the usage limits for each plan?</AccordionTrigger>
             <AccordionContent>
-              FREE: 10 total generations (one-time). BASIC: 200 active-plan generations. PRO: unlimited usage.
+              FREE: 10 total generations. BASIC: 100 generations. PRO: 250 generations.
             </AccordionContent>
           </AccordionItem>
 
           <AccordionItem value="q4">
             <AccordionTrigger>How fast do you respond?</AccordionTrigger>
             <AccordionContent>
-              We reply within one business day (usually much faster) during {HOURS_TEXT}. For urgent issues, call us or message on WhatsApp.
-            </AccordionContent>
-          </AccordionItem>
-
-          <AccordionItem value="q5">
-            <AccordionTrigger>Do you offer refunds?</AccordionTrigger>
-            <AccordionContent>
-              If something isn’t working as promised, reach out to <a href={`mailto:${BILLING_EMAIL}`} className="text-blue-600 underline">{BILLING_EMAIL}</a>. We’ll review on a case-by-case basis in line with our terms.
-            </AccordionContent>
-          </AccordionItem>
-
-          <AccordionItem value="q6">
-            <AccordionTrigger>Is my store data safe?</AccordionTrigger>
-            <AccordionContent>
-              We take privacy seriously and only use the minimum permissions needed for product generation. Contact <a href={`mailto:${SUPPORT_EMAIL}`} className="text-blue-600 underline">{SUPPORT_EMAIL}</a> for any specific questions.
+              We reply within one business day during {HOURS_TEXT}. For urgent issues, call us or WhatsApp.
             </AccordionContent>
           </AccordionItem>
         </Accordion>

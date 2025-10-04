@@ -171,21 +171,21 @@
               "name": "Basic",
               "price": "$12 /mese",
               "description": "Per negozi in crescita",
-              "features": [
-                "Genera fino a 200 prodotti",
-                "Solo un negozio",
-                "Assistenza prioritaria"
-              ]
+        "features": [
+          "Genera fino a 100 prodotti",
+          "Solo un negozio",
+          "Assistenza prioritaria"
+        ]
             },
             "pro": {
               "name": "Pro",
               "price": "$32 /mese",
               "description": "Per agenzie e gestori multi-negozio",
-              "features": [
-                "Generazione di prodotti illimitata",
-                "Supporto multi-negozio",
-                "Assistenza premium"
-              ]
+        "features": [
+          "Genera fino a 250 prodotti",
+          "Supporto multi-negozio",
+          "Assistenza premium"
+        ]
             }
           },
           "usage": {
