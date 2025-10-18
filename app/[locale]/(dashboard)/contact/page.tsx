@@ -19,6 +19,7 @@ import {
   CardTitle,
   CardContent,
 } from "@/components/ui/card";
+import { toast } from "@/components/ui/use-toast";
 
 const PHONE_NUMBER  = "+92 300 1234567";
 const WHATSAPP_LINK = "https://wa.me/923001234567";
@@ -35,7 +36,6 @@ export default function ContactPage() {
     storeDomain: "",
   });
   const [submitting, setSubmitting] = useState(false);
-  const [notice, setNotice] = useState<null | { type: "success" | "error"; text: string }>(null);
 
   const isValid = useMemo(() => {
     return form.name.trim() && /\S+@\S+\.\S+/.test(form.email) && form.message.trim();
@@ -49,11 +49,10 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isValid) {
-      setNotice({ type: "error", text: "Please fill in your name, a valid email, and a message." });
+      toast({ description: "Please fill in your name, a valid email, and a message.", variant: "destructive" });
       return;
     }
     setSubmitting(true);
-    setNotice(null);
 
     try {
       const res = await fetch("/api/contact", {
@@ -73,10 +72,10 @@ export default function ContactPage() {
         throw new Error(data?.error || "Failed to send message.");
       }
 
-      setNotice({ type: "success", text: "✅ Your message has been sent successfully! We’ll reply ASAP." });
+      toast({ description: "Your message has been sent successfully! We'll reply ASAP.", variant: "success" });
       setForm({ name: "", email: "", topic: "General", message: "", storeDomain: "" });
     } catch (err: any) {
-      setNotice({ type: "error", text: err?.message || "Something went wrong sending your message." });
+      toast({ description: err?.message || "Something went wrong sending your message.", variant: "destructive" });
     } finally {
       setSubmitting(false);
     }
@@ -101,15 +100,6 @@ export default function ContactPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {notice && (
-              <div
-                className={`mb-4 rounded-xl px-4 py-3 text-sm ${
-                  notice.type === "success" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
-                }`}
-              >
-                {notice.text}
-              </div>
-            )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid md:grid-cols-2 gap-4">
