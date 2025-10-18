@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { apiFetch } from "@/lib/api";
 import { useTranslations } from "next-intl";
+import { toast } from "@/components/ui/use-toast";
 
 type PlanValue = "FREE" | "BASIC" | "PRO";
 
@@ -242,7 +243,7 @@ export default function BillingPage() {
     }
 
     if (plan === "FREE" && !freeEligibleEver) {
-      alert(t("alerts.freeOnce"));
+      toast({ description: t("alerts.freeOnce"), variant: "destructive" });
       setLoading(null);
       return;
     }
@@ -263,7 +264,7 @@ export default function BillingPage() {
         }
         if (data?.code === "FREE_LIFETIME_USED") {
           setFreeEligibleEver(false);
-          alert(t("alerts.freeOnce"));
+          toast({ description: t("alerts.freeOnce"), variant: "destructive" });
           return;
         }
         throw new Error(data?.message || t("errors.generic"));
@@ -272,13 +273,13 @@ export default function BillingPage() {
       if (plan === "FREE") {
         await refreshSubscription();
         setFreeEligibleEver(false);
-        alert(t("alerts.freeActivated"));
+        toast({ description: t("alerts.freeActivated"), variant: "success" });
       } else if (data.confirmationUrl) {
         window.location.href = data.confirmationUrl;
       }
     } catch (err: any) {
       setError(err?.message || t("errors.generic"));
-      alert(err?.message || t("errors.generic"));
+      toast({ description: err?.message || t("errors.generic"), variant: "destructive" });
     } finally {
       setLoading(null);
     }
@@ -297,9 +298,9 @@ export default function BillingPage() {
 
       await refreshSubscription();
       const label = planName(plan);
-      alert(t("alerts.cancelled", { plan: label }));
+      toast({ description: t("alerts.cancelled", { plan: label }), variant: "success" });
     } catch (err: any) {
-      alert(err?.message || t("errors.cancelFailed"));
+      toast({ description: err?.message || t("errors.cancelFailed"), variant: "destructive" });
     } finally {
       setLoading(null);
     }
