@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/select";
 import { Loader2, UploadCloud } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { toast } from "@/components/ui/use-toast";
 
 type Store = { id: string; shopDomain: string };
 
@@ -139,7 +140,7 @@ export default function SettingsPage() {
     if (res.ok && data.avatarUrl) {
       setAvatarUrl(data.avatarUrl);
     } else {
-      alert(data?.message || t("alerts.uploadFailed"));
+      toast({ description: data?.message || t("alerts.uploadFailed"), variant: "destructive" });
     }
   };
 
@@ -159,7 +160,7 @@ export default function SettingsPage() {
         const d = await res.json().catch(() => ({}));
         throw new Error(d?.message || t("errors.saveFailed"));
       }
-      alert(t("alerts.profileSaved"));
+      toast({ description: t("alerts.profileSaved"), variant: "success" });
     } catch (e: any) {
       setError(e?.message || t("errors.saveFailed"));
     } finally {
@@ -174,7 +175,7 @@ export default function SettingsPage() {
       body: JSON.stringify({ language }),
     });
     if (!res.ok) {
-      alert(t("alerts.storeLangFailed"));
+      toast({ description: t("alerts.storeLangFailed"), variant: "destructive" });
     }
   };
 
