@@ -23,12 +23,20 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Copy, Loader2, Maximize2, RefreshCw } from "lucide-react";
 import { apiFetch } from "@/lib/api";
+import { toast } from "@/components/ui/use-toast";
 
 type Store = { id: string; shopDomain: string };
 type Product = {
   id: string;
   title: string;
-  status: "idle" | "generating" | "done" | "failed" | "active" | "draft" | "published";
+  status:
+    | "idle"
+    | "generating"
+    | "done"
+    | "failed"
+    | "active"
+    | "draft"
+    | "published";
   updatedAt: string;
   aiDescription?: string | null;
   aiMetaDescription?: string | null;
@@ -65,7 +73,9 @@ export default function DashboardPage() {
   const [editedDescription, setEditedDescription] = useState("");
   const [editedMeta, setEditedMeta] = useState("");
   const [editedTags, setEditedTags] = useState("");
-  const [editedStatus, setEditedStatus] = useState<"draft" | "active" | "published">("draft");
+  const [editedStatus, setEditedStatus] = useState<
+    "draft" | "active" | "published"
+  >("draft");
   const [saving, setSaving] = useState(false);
 
   // ---------- helpers ----------
@@ -84,9 +94,13 @@ export default function DashboardPage() {
         setStores(fetchedStores);
 
         // pick preferred store if any
-        const preferred = typeof window !== "undefined" ? localStorage.getItem("storeId") : null;
+        const preferred =
+          typeof window !== "undefined"
+            ? localStorage.getItem("storeId")
+            : null;
         let next = fetchedStores[0]?.id || "";
-        if (preferred && fetchedStores.some((s) => s.id === preferred)) next = preferred;
+        if (preferred && fetchedStores.some((s) => s.id === preferred))
+          next = preferred;
 
         if (next) {
           setSelectedStore(next);
@@ -158,7 +172,10 @@ export default function DashboardPage() {
 
   // ---------- quick generate ----------
   const handleQuickGenerate = async () => {
-    if (!selectedProduct) return alert(t("alerts.selectProduct"));
+    if (!selectedProduct) {
+      toast({ description: t("alerts.selectProduct"), variant: "destructive" });
+      return;
+    }
     try {
       setGenerating(true);
       const res = await apiFetch("/generate/quick", {
@@ -166,13 +183,16 @@ export default function DashboardPage() {
         body: JSON.stringify({
           productId: selectedProduct,
           tone,
-          keywords: keywords.split(",").map((k) => k.trim()).filter(Boolean),
+          keywords: keywords
+            .split(",")
+            .map((k) => k.trim())
+            .filter(Boolean),
           // ❌ no language here: backend picks store/user preference
         }),
       });
       const data = await res.json();
       if (data.success) {
-        alert(t("alerts.quickSuccess"));
+        toast({ description: t("alerts.quickSuccess"), variant: "success" });
         // refresh recent list
         const rr = await apiFetch(`/products/recent?storeId=${selectedStore}`);
         const rdata = await rr.json();
@@ -182,10 +202,20 @@ export default function DashboardPage() {
         const pdata = await pr.json();
         setProducts(pdata?.data?.products || []);
       } else {
-        alert(t("alerts.quickFail", { message: data.message || t("errors.generic") }));
+        toast({
+          description: t("alerts.quickFail", {
+            message: data.message || t("errors.generic"),
+          }),
+          variant: "destructive",
+        });
       }
     } catch (err: any) {
-      alert(t("alerts.quickFail", { message: err?.message || t("errors.generic") }));
+      toast({
+        description: t("alerts.quickFail", {
+          message: err?.message || t("errors.generic"),
+        }),
+        variant: "destructive",
+      });
     } finally {
       setGenerating(false);
     }
@@ -195,7 +225,7 @@ export default function DashboardPage() {
   const handleCopy = (text?: string | null) => {
     if (!text) return;
     navigator.clipboard.writeText(text);
-    alert(t("alerts.copied"));
+    toast({ description: t("alerts.copied"), variant: "success" });
   };
 
   // ---------- open modal for edit ----------
@@ -227,15 +257,25 @@ export default function DashboardPage() {
       });
       const data = await res.json();
       if (res.ok) {
-        alert(t("alerts.productUpdated"));
+        toast({ description: t("alerts.productUpdated"), variant: "success" });
         setOpen(false);
         // refresh recent/products
         loadStoreData(selectedStore);
       } else {
-        alert(t("alerts.updateFail", { message: data.message || t("errors.generic") }));
+        toast({
+          description: t("alerts.updateFail", {
+            message: data.message || t("errors.generic"),
+          }),
+          variant: "destructive",
+        });
       }
     } catch (err: any) {
-      alert(t("alerts.updateFail", { message: err?.message || t("errors.generic") }));
+      toast({
+        description: t("alerts.updateFail", {
+          message: err?.message || t("errors.generic"),
+        }),
+        variant: "destructive",
+      });
     } finally {
       setSaving(false);
     }
@@ -276,7 +316,9 @@ export default function DashboardPage() {
               className="flex items-center gap-2"
               title={t("quickGenerate.syncTooltip")}
             >
-              <RefreshCw className={`h-4 w-4 ${syncing ? "animate-spin" : ""}`} />
+              <RefreshCw
+                className={`h-4 w-4 ${syncing ? "animate-spin" : ""}`}
+              />
               {t("quickGenerate.sync")}
             </Button>
           </div>
@@ -284,7 +326,9 @@ export default function DashboardPage() {
           {/* store / product picker */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label className="mb-1 block">{t("quickGenerate.labels.store")}</Label>
+              <Label className="mb-1 block">
+                {t("quickGenerate.labels.store")}
+              </Label>
               {storesLoading ? (
                 <div className="h-10 rounded-md bg-gray-100 animate-pulse" />
               ) : (
@@ -292,12 +336,15 @@ export default function DashboardPage() {
                   value={selectedStore}
                   onValueChange={(v) => {
                     setSelectedStore(v);
-                    if (typeof window !== "undefined") localStorage.setItem("storeId", v);
+                    if (typeof window !== "undefined")
+                      localStorage.setItem("storeId", v);
                     setSelectedProduct("");
                   }}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder={t("quickGenerate.placeholders.chooseStore")} />
+                    <SelectValue
+                      placeholder={t("quickGenerate.placeholders.chooseStore")}
+                    />
                   </SelectTrigger>
                   <SelectContent>
                     {stores.map((s) => (
@@ -311,7 +358,9 @@ export default function DashboardPage() {
             </div>
 
             <div>
-              <Label className="mb-1 block">{t("quickGenerate.labels.product")}</Label>
+              <Label className="mb-1 block">
+                {t("quickGenerate.labels.product")}
+              </Label>
               {productsLoading ? (
                 <div className="h-10 rounded-md bg-gray-100 animate-pulse" />
               ) : (
@@ -341,7 +390,9 @@ export default function DashboardPage() {
             </div>
 
             <div className="col-span-2">
-              <Label className="mb-1 block">{t("quickGenerate.labels.keywords")}</Label>
+              <Label className="mb-1 block">
+                {t("quickGenerate.labels.keywords")}
+              </Label>
               <Input
                 placeholder={t("quickGenerate.placeholders.keywords")}
                 value={keywords}
@@ -350,7 +401,9 @@ export default function DashboardPage() {
             </div>
 
             <div>
-              <Label className="mb-1 block">{t("quickGenerate.labels.tone")}</Label>
+              <Label className="mb-1 block">
+                {t("quickGenerate.labels.tone")}
+              </Label>
               <Select value={tone} onValueChange={setTone}>
                 <SelectTrigger>
                   <SelectValue placeholder={t("quickGenerate.labels.tone")} />
@@ -358,17 +411,25 @@ export default function DashboardPage() {
                 <SelectContent>
                   <SelectItem value="neutral">{t("tone.neutral")}</SelectItem>
                   <SelectItem value="friendly">{t("tone.friendly")}</SelectItem>
-                  <SelectItem value="professional">{t("tone.professional")}</SelectItem>
-                  <SelectItem value="persuasive">{t("tone.persuasive")}</SelectItem>
+                  <SelectItem value="professional">
+                    {t("tone.professional")}
+                  </SelectItem>
+                  <SelectItem value="persuasive">
+                    {t("tone.persuasive")}
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div className="flex items-end">
-              <Button onClick={handleQuickGenerate} disabled={!selectedProduct || generating}>
+              <Button
+                onClick={handleQuickGenerate}
+                disabled={!selectedProduct || generating}
+              >
                 {generating ? (
                   <>
-                    <Loader2 className="h-4 w-4 animate-spin mr-2" /> {t("buttons.generating")}
+                    <Loader2 className="h-4 w-4 animate-spin mr-2" />{" "}
+                    {t("buttons.generating")}
                   </>
                 ) : (
                   t("buttons.generate")
@@ -400,12 +461,16 @@ export default function DashboardPage() {
                         {r.aiDescription}
                       </p>
                     ) : (
-                      <p className="text-sm text-gray-500 mt-2">{t("recent.noDescription")}</p>
+                      <p className="text-sm text-gray-500 mt-2">
+                        {t("recent.noDescription")}
+                      </p>
                     )}
 
                     {r.aiTags && (
                       <p className="text-xs text-gray-400 mt-2">
-                        <span className="font-medium text-gray-500">{t("labels.tags")}</span>{" "}
+                        <span className="font-medium text-gray-500">
+                          {t("labels.tags")}
+                        </span>{" "}
                         {r.aiTags}
                       </p>
                     )}
@@ -421,7 +486,11 @@ export default function DashboardPage() {
                     >
                       <Copy className="w-4 h-4" />
                     </Button>
-                    <Button size="sm" variant="outline" onClick={() => handleExpand(r)}>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => handleExpand(r)}
+                    >
                       <Maximize2 className="w-4 h-4" />
                     </Button>
                   </div>
@@ -439,7 +508,10 @@ export default function DashboardPage() {
           {activitiesLoading ? (
             <div className="space-y-2">
               {Array.from({ length: 5 }).map((_, i) => (
-                <div key={i} className="h-4 w-full bg-gray-100 rounded animate-pulse" />
+                <div
+                  key={i}
+                  className="h-4 w-full bg-gray-100 rounded animate-pulse"
+                />
               ))}
             </div>
           ) : activities.length === 0 ? (
@@ -472,7 +544,9 @@ export default function DashboardPage() {
 
               <div>
                 <div className="flex items-center justify-between">
-                  <Label className="mb-1 block">{t("modal.labels.description")}</Label>
+                  <Label className="mb-1 block">
+                    {t("modal.labels.description")}
+                  </Label>
                   <Button
                     size="sm"
                     variant="ghost"
@@ -494,7 +568,11 @@ export default function DashboardPage() {
               <div>
                 <div className="flex items-center justify-between">
                   <Label className="mb-1 block">{t("modal.labels.meta")}</Label>
-                  <span className={`text-xs ${metaLength > 160 ? "text-red-600" : "text-gray-500"}`}>
+                  <span
+                    className={`text-xs ${
+                      metaLength > 160 ? "text-red-600" : "text-gray-500"
+                    }`}
+                  >
                     {metaLength}/160
                   </span>
                 </div>
@@ -519,7 +597,9 @@ export default function DashboardPage() {
                 <Label className="mb-1 block">{t("modal.labels.status")}</Label>
                 <Select
                   value={editedStatus}
-                  onValueChange={(v) => setEditedStatus(v as "draft" | "active" | "published")}
+                  onValueChange={(v) =>
+                    setEditedStatus(v as "draft" | "active" | "published")
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue placeholder={t("modal.placeholders.status")} />
@@ -527,7 +607,9 @@ export default function DashboardPage() {
                   <SelectContent>
                     <SelectItem value="draft">{t("status.draft")}</SelectItem>
                     <SelectItem value="active">{t("status.active")}</SelectItem>
-                    <SelectItem value="published">{t("status.published")}</SelectItem>
+                    <SelectItem value="published">
+                      {t("status.published")}
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -535,13 +617,18 @@ export default function DashboardPage() {
           )}
 
           <DialogFooter className="gap-2">
-            <Button variant="outline" onClick={() => setOpen(false)} disabled={saving}>
+            <Button
+              variant="outline"
+              onClick={() => setOpen(false)}
+              disabled={saving}
+            >
               {t("buttons.cancel")}
             </Button>
             <Button onClick={handleSave} disabled={saving}>
               {saving ? (
                 <>
-                  <Loader2 className="h-4 w-4 animate-spin mr-2" /> {t("buttons.saving")}
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />{" "}
+                  {t("buttons.saving")}
                 </>
               ) : (
                 t("buttons.save")
