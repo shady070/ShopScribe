@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -163,8 +163,14 @@ export default function DashboardPage() {
     }
   };
 
+  const initialStoreSync = useRef(true);
+
   useEffect(() => {
     if (!selectedStore) return;
+    if (initialStoreSync.current) {
+      initialStoreSync.current = false;
+      return;
+    }
     // fire and forget
     syncFromShopify();
     // eslint-disable-next-line react-hooks/exhaustive-deps
