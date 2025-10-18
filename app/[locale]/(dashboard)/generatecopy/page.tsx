@@ -286,14 +286,16 @@ export default function GeneratePage() {
       return;
     }
 
+    const selectedIds = [...selected];
+    const selectedCount = selectedIds.length;
     try {
-      setLoadingProducts(selected);
-      setProducts(prev => prev.map(p => selected.includes(p.id) ? { ...p, status: "generating" } : p));
+      setLoadingProducts(selectedIds);
+      setProducts(prev => prev.map(p => selectedIds.includes(p.id) ? { ...p, status: "generating" } : p));
 
       const res = await apiFetch("/generate/batch", {
         method: "POST",
         body: JSON.stringify({
-          productIds: selected,
+          productIds: selectedIds,
           storeId: selectedStore,
           language: effectiveLanguage, // pass chosen language
         }),
@@ -301,19 +303,23 @@ export default function GeneratePage() {
       const data = await res.json();
 
       if (res.ok && data?.success) {
-        setProducts(prev => prev.map(p => selected.includes(p.id) ? { ...p, status: "done" } : p));
+        setProducts(prev => prev.map(p => selectedIds.includes(p.id) ? { ...p, status: "done" } : p));
         setSelected([]);
         await fetchSubscriptionAndUsage(selectedStore);
+        await fetchProducts(selectedStore, 1);
+        if (page !== 1) {
+          setPage(1);
+        }
         toast({
-          description: t("alerts.batchSuccess", { count: selected.length }),
+          description: t("alerts.batchSuccess", { count: selectedCount }),
           variant: "success",
         });
       } else {
-        setProducts(prev => prev.map(p => selected.includes(p.id) ? { ...p, status: "failed" } : p));
+        setProducts(prev => prev.map(p => selectedIds.includes(p.id) ? { ...p, status: "failed" } : p));
         toast({ description: data?.message || t("errors.generic"), variant: "destructive" });
       }
     } catch (err: unknown) {
-      setProducts(prev => prev.map(p => selected.includes(p.id) ? { ...p, status: "failed" } : p));
+      setProducts(prev => prev.map(p => selectedIds.includes(p.id) ? { ...p, status: "failed" } : p));
       const errorMessage = err instanceof Error ? err.message : t("errors.generic");
       toast({ description: errorMessage, variant: "destructive" });
     } finally {
