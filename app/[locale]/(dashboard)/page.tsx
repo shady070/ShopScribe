@@ -201,6 +201,17 @@ export default function DashboardPage() {
         const pr = await apiFetch(`/products?storeId=${selectedStore}`);
         const pdata = await pr.json();
         setProducts(pdata?.data?.products || []);
+        // refresh activities feed
+        try {
+          setActivitiesLoading(true);
+          const aRes = await apiFetch(`/activities?storeId=${selectedStore}`);
+          const aData = aRes.ok ? await aRes.json() : {};
+          setActivities(aData?.data || []);
+        } catch {
+          setActivities([]);
+        } finally {
+          setActivitiesLoading(false);
+        }
       } else {
         toast({
           description: t("alerts.quickFail", {
@@ -517,7 +528,7 @@ export default function DashboardPage() {
           ) : activities.length === 0 ? (
             <p className="text-sm text-gray-500">{t("activity.empty")}</p>
           ) : (
-            <ul className="space-y-2 text-sm">
+            <ul className="space-y-2 text-sm max-h-64 overflow-y-auto pr-1">
               {activities.map((a) => (
                 <li key={a.id}>
                   <span className="font-medium">{a.type}</span> — {a.message}
