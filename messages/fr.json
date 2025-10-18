@@ -86,197 +86,202 @@
     "generateCopy": "Générer une copie",
     "settings": "Paramètres"
   },
-    "bulk": {
-      "header": { "title": "Génération en lot" },
-      "ui": {
-        "loadingStores": "Chargement des boutiques…",
-        "selectStore": "Sélectionner une boutique"
-      },
-      "usage": {
-        "planLabel": "Forfait :",
-        "unlimitedUsage": "Utilisation illimitée",
-        "usageLabel": "Utilisation",
-        "unlimited": "Illimité",
-        "usedOf": "{used} / {limit}",
-        "remainingLabel": "Restant : {remaining}",
-        "generatingLanguage": "Langue de génération",
-        "storePrefSuffix": "(préférence de la boutique)",
-        "profileDefaultSuffix": "(préférence du profil)",
-        "noPlan": "Aucun forfait actif — actions susceptibles d’être bloquées."
-      },
-      "table": {
+  "bulk": {
+    "header": {
+      "title": "Génération en lot"
+    },
+    "ui": {
+      "loadingStores": "Chargement des boutiques…",
+      "selectStore": "Sélectionner une boutique"
+    },
+    "usage": {
+      "planLabel": "Forfait :",
+      "unlimitedUsage": "Utilisation illimitée",
+      "usageLabel": "Utilisation",
+      "unlimited": "Illimité",
+      "usedOf": "{used} / {limit}",
+      "remainingLabel": "Restant : {remaining}",
+      "generatingLanguage": "Langue de génération",
+      "storePrefSuffix": "(préférence de la boutique)",
+      "profileDefaultSuffix": "(préférence du profil)",
+      "noPlan": "Aucun forfait actif — actions susceptibles d’être bloquées."
+    },
+    "table": {
+      "title": "Titre",
+      "status": "Statut",
+      "updatedOn": "Mis à jour le",
+      "noProducts": "Aucun produit trouvé",
+      "pageOf": "Page {page} sur {total}"
+    },
+    "status": {
+      "generating": "Génération...",
+      "created": "Créé",
+      "failed": "Échec",
+      "notCreated": "Non créé"
+    },
+    "buttons": {
+      "previous": "Précédent",
+      "next": "Suivant",
+      "generating": "Génération…",
+      "generateSelected": "Générer la sélection"
+    },
+    "modal": {
+      "title": "Détails du produit",
+      "fields": {
+        "id": "ID",
         "title": "Titre",
         "status": "Statut",
-        "updatedOn": "Mis à jour le",
-        "noProducts": "Aucun produit trouvé",
-        "pageOf": "Page {page} sur {total}"
+        "updatedAt": "Mis à jour le"
       },
-      "status": {
-        "generating": "Génération...",
-        "created": "Créé",
-        "failed": "Échec",
-        "notCreated": "Non créé"
-      },
-      "buttons": {
-        "previous": "Précédent",
-        "next": "Suivant",
-        "generating": "Génération…",
-        "generateSelected": "Générer la sélection"
-      },
-      "modal": {
-        "title": "Détails du produit",
-        "fields": {
-          "id": "ID",
-          "title": "Titre",
-          "status": "Statut",
-          "updatedAt": "Mis à jour le"
-        },
-        "noProduct": "Aucun produit sélectionné."
-      },
-      "alerts": {
-        "selectAny": "Sélectionnez au moins un produit.",
-        "noStore": "Aucune boutique sélectionnée",
-        "loadingLang": "Veuillez patienter, chargement des préférences de langue…",
-        "usageCap": "⚠️ Limite d’utilisation atteinte. Utilisé : {used}, Limite : {limit}."
-      },
-      "errors": { "generic": "Une erreur s’est produite" },
-      "lang": {
-        "en": "Anglais",
-        "es": "Espagnol",
-        "fr": "Français",
-        "de": "Allemand",
-        "it": "Italien",
-        "pt": "Portugais",
-        "nl": "Néerlandais"
-      }
+      "noProduct": "Aucun produit sélectionné."
     },
-      "billing": {
-        "header": {
-          "title": "Choisissez votre forfait",
-          "subtitle": "Sélectionnez le forfait adapté aux besoins de votre boutique."
-        },
-        "activeStore": "Boutique active :",
-        "plans": {
-          "free": {
-            "name": "Free",
-            "price": "$0",
-            "description": "Pour les tests et les petites boutiques",
-            "features": [
-              "Générez jusqu’à 10 produits",
-              "Une seule boutique",
-              "Assistance de base"
-            ]
-          },
-          "basic": {
-            "name": "Basic",
-            "price": "$12 /mois",
-            "description": "Pour les boutiques en croissance",
+    "alerts": {
+      "selectAny": "Sélectionnez au moins un produit.",
+      "noStore": "Aucune boutique sélectionnée",
+      "loadingLang": "Veuillez patienter, chargement des préférences de langue…",
+      "usageCap": "⚠️ Limite d’utilisation atteinte. Utilisé : {used}, Limite : {limit}.",
+      "batchSuccess": "Contenu genere pour {count} produit(s)."
+    },
+    "errors": {
+      "generic": "Une erreur s’est produite"
+    },
+    "lang": {
+      "en": "Anglais",
+      "es": "Espagnol",
+      "fr": "Français",
+      "de": "Allemand",
+      "it": "Italien",
+      "pt": "Portugais",
+      "nl": "Néerlandais"
+    }
+  },
+  "billing": {
+    "header": {
+      "title": "Choisissez votre forfait",
+      "subtitle": "Sélectionnez le forfait adapté aux besoins de votre boutique."
+    },
+    "activeStore": "Boutique active :",
+    "plans": {
+      "free": {
+        "name": "Free",
+        "price": "$0",
+        "description": "Pour les tests et les petites boutiques",
+        "features": [
+          "Générez jusqu’à 10 produits",
+          "Une seule boutique",
+          "Assistance de base"
+        ]
+      },
+      "basic": {
+        "name": "Basic",
+        "price": "$12 /mois",
+        "description": "Pour les boutiques en croissance",
         "features": [
           "Générez jusqu’à 100 produits",
           "Une seule boutique",
           "Assistance prioritaire"
         ]
-          },
-          "pro": {
-            "name": "Pro",
-            "price": "$32 /mois",
-            "description": "Pour les agences et les multi-boutiques",
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "$32 /mois",
+        "description": "Pour les agences et les multi-boutiques",
         "features": [
           "Générez jusqu’à 250 produits",
           "Support multi-boutiques",
           "Assistance premium"
         ]
-          }
-        },
-        "usage": {
-          "label": "Utilisation",
-          "unlimited": "Illimité",
-          "usedOfPct": "{used}/{total} ({pct}%)"
-        },
-        "buttons": {
-          "subscribe": "S’abonner",
-          "active": "Actif",
-          "processing": "Traitement...",
-          "switchPlan": "Changer de forfait…",
-          "cancel": "Annuler",
-          "keepCurrent": "Conserver le forfait actuel",
-          "cancelAndContinue": "Annuler l’actuel et continuer"
-        },
-        "free": {
-          "usedBadge": "Utilisé ({limit}/{limit})",
-          "usedOnceNote": "Vous avez déjà utilisé le forfait Free."
-        },
-        "confirm": {
-          "title": "Changer de forfait ?",
-          "body": "Vous avez actuellement {current} actif. Pour passer à {target}, vous devez d’abord annuler votre forfait actuel."
-        },
-        "errors": {
-          "stores": "Échec du chargement des boutiques",
-          "subscription": "Échec du chargement de l’abonnement",
-          "cancelFailed": "Échec de l’annulation",
-          "generic": "Une erreur s’est produite"
-        },
-        "alerts": {
-          "freeOnce": "Vous avez déjà utilisé le forfait Free. Il ne peut être activé qu’une seule fois dans la vie.",
-          "freeActivated": "✅ Forfait Free activé !",
-          "cancelled": "Abonnement {plan} annulé"
-        }
-      },
-        "settings": {
-          "header": {
-            "title": "Paramètres"
-          },
-          "profile": {
-            "title": "Profil",
-            "subtitle": "Gérez votre e-mail, votre avatar et le thème.",
-            "avatarAlt": "avatar",
-            "noAvatar": "Pas d’avatar",
-            "changeAvatar": "Changer d’avatar",
-            "upload": "Téléverser"
-          },
-          "fields": {
-            "email": "E-mail",
-            "theme": "Thème",
-            "defaultLanguage": "Langue par défaut (secours)"
-          },
-          "theme": {
-            "system": "Système",
-            "light": "Clair",
-            "dark": "Sombre"
-          },
-          "langs": {
-            "en": "Anglais",
-            "es": "Espagnol",
-            "fr": "Français",
-            "de": "Allemand",
-            "it": "Italien",
-            "pt": "Portugais",
-            "nl": "Néerlandais"
-          },
-          "buttons": {
-            "save": "Enregistrer",
-            "saving": "Enregistrement…"
-          },
-          "stores": {
-            "title": "Langues des boutiques",
-            "empty": "Aucune boutique connectée.",
-            "storeId": "ID de la boutique"
-          },
-          "placeholders": {
-            "theme": "Choisir un thème",
-            "language": "Choisir une langue"
-          },
-          "alerts": {
-            "uploadFailed": "Échec du téléversement",
-            "profileSaved": "✅ Profil enregistré",
-            "storeLangFailed": "Échec de l’enregistrement de la langue de la boutique"
-          },
-          "errors": {
-            "loadProfile": "Échec du chargement du profil",
-            "loadStores": "Échec du chargement des boutiques",
-            "loadStorePrefs": "Échec du chargement des préférences de boutique",
-            "loadSettings": "Échec du chargement des paramètres",
-            "saveFailed": "Échec de l’enregistrement"
-          }
-        }      
+      }
+    },
+    "usage": {
+      "label": "Utilisation",
+      "unlimited": "Illimité",
+      "usedOfPct": "{used}/{total} ({pct}%)"
+    },
+    "buttons": {
+      "subscribe": "S’abonner",
+      "active": "Actif",
+      "processing": "Traitement...",
+      "switchPlan": "Changer de forfait…",
+      "cancel": "Annuler",
+      "keepCurrent": "Conserver le forfait actuel",
+      "cancelAndContinue": "Annuler l’actuel et continuer"
+    },
+    "free": {
+      "usedBadge": "Utilisé ({limit}/{limit})",
+      "usedOnceNote": "Vous avez déjà utilisé le forfait Free."
+    },
+    "confirm": {
+      "title": "Changer de forfait ?",
+      "body": "Vous avez actuellement {current} actif. Pour passer à {target}, vous devez d’abord annuler votre forfait actuel."
+    },
+    "errors": {
+      "stores": "Échec du chargement des boutiques",
+      "subscription": "Échec du chargement de l’abonnement",
+      "cancelFailed": "Échec de l’annulation",
+      "generic": "Une erreur s’est produite"
+    },
+    "alerts": {
+      "freeOnce": "Vous avez déjà utilisé le forfait Free. Il ne peut être activé qu’une seule fois dans la vie.",
+      "freeActivated": "✅ Forfait Free activé !",
+      "cancelled": "Abonnement {plan} annulé"
+    }
+  },
+  "settings": {
+    "header": {
+      "title": "Paramètres"
+    },
+    "profile": {
+      "title": "Profil",
+      "subtitle": "Gérez votre e-mail, votre avatar et le thème.",
+      "avatarAlt": "avatar",
+      "noAvatar": "Pas d’avatar",
+      "changeAvatar": "Changer d’avatar",
+      "upload": "Téléverser"
+    },
+    "fields": {
+      "email": "E-mail",
+      "theme": "Thème",
+      "defaultLanguage": "Langue par défaut (secours)"
+    },
+    "theme": {
+      "system": "Système",
+      "light": "Clair",
+      "dark": "Sombre"
+    },
+    "langs": {
+      "en": "Anglais",
+      "es": "Espagnol",
+      "fr": "Français",
+      "de": "Allemand",
+      "it": "Italien",
+      "pt": "Portugais",
+      "nl": "Néerlandais"
+    },
+    "buttons": {
+      "save": "Enregistrer",
+      "saving": "Enregistrement…"
+    },
+    "stores": {
+      "title": "Langues des boutiques",
+      "empty": "Aucune boutique connectée.",
+      "storeId": "ID de la boutique"
+    },
+    "placeholders": {
+      "theme": "Choisir un thème",
+      "language": "Choisir une langue"
+    },
+    "alerts": {
+      "uploadFailed": "Échec du téléversement",
+      "profileSaved": "✅ Profil enregistré",
+      "storeLangFailed": "Échec de l’enregistrement de la langue de la boutique"
+    },
+    "errors": {
+      "loadProfile": "Échec du chargement du profil",
+      "loadStores": "Échec du chargement des boutiques",
+      "loadStorePrefs": "Échec du chargement des préférences de boutique",
+      "loadSettings": "Échec du chargement des paramètres",
+      "saveFailed": "Échec de l’enregistrement"
+    }
+  }
 }

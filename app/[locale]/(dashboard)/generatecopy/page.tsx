@@ -14,6 +14,7 @@ import {
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
+import { toast } from "@/components/ui/use-toast";
 import {useTranslations} from "next-intl";
 
 interface Product {
@@ -260,16 +261,29 @@ export default function GeneratePage() {
 
   // batch generate
   const handleGenerate = async () => {
-    if (selected.length === 0) return alert(t("alerts.selectAny"));
-    if (!selectedStore) return alert(t("alerts.noStore"));
-    if (loadingLang) return alert(t("alerts.loadingLang"));
+    if (selected.length === 0) {
+      toast({ description: t("alerts.selectAny"), variant: "destructive" });
+      return;
+    }
+    if (!selectedStore) {
+      toast({ description: t("alerts.noStore"), variant: "destructive" });
+      return;
+    }
+    if (loadingLang) {
+      toast({ description: t("alerts.loadingLang"), variant: "destructive" });
+      return;
+    }
 
     const remaining = usageInfo.plan === "PRO" ? Infinity : (usageInfo.remaining as number);
     if (remaining < selected.length) {
-      return alert(t("alerts.usageCap", {
-        used: usageInfo.used,
-        limit: usageInfo.limit ?? t("usage.unlimited")
-      }));
+      toast({
+        description: t("alerts.usageCap", {
+          used: usageInfo.used,
+          limit: usageInfo.limit ?? t("usage.unlimited")
+        }),
+        variant: "destructive",
+      });
+      return;
     }
 
     try {
@@ -290,13 +304,18 @@ export default function GeneratePage() {
         setProducts(prev => prev.map(p => selected.includes(p.id) ? { ...p, status: "done" } : p));
         setSelected([]);
         await fetchSubscriptionAndUsage(selectedStore);
+        toast({
+          description: t("alerts.batchSuccess", { count: selected.length }),
+          variant: "success",
+        });
       } else {
         setProducts(prev => prev.map(p => selected.includes(p.id) ? { ...p, status: "failed" } : p));
-        alert(data?.message || t("errors.generic"));
+        toast({ description: data?.message || t("errors.generic"), variant: "destructive" });
       }
     } catch (err: unknown) {
       setProducts(prev => prev.map(p => selected.includes(p.id) ? { ...p, status: "failed" } : p));
-      alert(err?.message || t("errors.generic"));
+      const errorMessage = err instanceof Error ? err.message : t("errors.generic");
+      toast({ description: errorMessage, variant: "destructive" });
     } finally {
       setLoadingProducts([]);
     }

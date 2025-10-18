@@ -87,7 +87,9 @@
     "settings": "Settings"
   },
   "bulk": {
-    "header": { "title": "Bulk Generate" },
+    "header": {
+      "title": "Bulk Generate"
+    },
     "ui": {
       "loadingStores": "Loading stores...",
       "selectStore": "Select Store"
@@ -137,9 +139,12 @@
       "selectAny": "Select at least one product.",
       "noStore": "No store selected",
       "loadingLang": "Please wait, loading language preferences…",
-      "usageCap": "⚠️ Usage limit reached. Used: {used}, Limit: {limit}."
+      "usageCap": "⚠️ Usage limit reached. Used: {used}, Limit: {limit}.",
+      "batchSuccess": "Generated copy for {count} product(s)."
     },
-    "errors": { "generic": "Something went wrong" },
+    "errors": {
+      "generic": "Something went wrong"
+    },
     "lang": {
       "en": "English",
       "es": "Spanish",

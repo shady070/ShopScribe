@@ -86,197 +86,202 @@
     "generateCopy": "Kopie generieren",
     "settings": "Einstellungen"
   },
-    "bulk": {
-      "header": { "title": "Sammelgenerierung" },
-      "ui": {
-        "loadingStores": "Shops werden geladen…",
-        "selectStore": "Shop auswählen"
-      },
-      "usage": {
-        "planLabel": "Tarif:",
-        "unlimitedUsage": "Unbegrenzte Nutzung",
-        "usageLabel": "Nutzung",
-        "unlimited": "Unbegrenzt",
-        "usedOf": "{used} / {limit}",
-        "remainingLabel": "Verbleibend: {remaining}",
-        "generatingLanguage": "Generierungssprache",
-        "storePrefSuffix": "(Shop-Einstellung)",
-        "profileDefaultSuffix": "(Profilstandard)",
-        "noPlan": "Kein aktiver Tarif — Aktionen könnten blockiert sein."
-      },
-      "table": {
+  "bulk": {
+    "header": {
+      "title": "Sammelgenerierung"
+    },
+    "ui": {
+      "loadingStores": "Shops werden geladen…",
+      "selectStore": "Shop auswählen"
+    },
+    "usage": {
+      "planLabel": "Tarif:",
+      "unlimitedUsage": "Unbegrenzte Nutzung",
+      "usageLabel": "Nutzung",
+      "unlimited": "Unbegrenzt",
+      "usedOf": "{used} / {limit}",
+      "remainingLabel": "Verbleibend: {remaining}",
+      "generatingLanguage": "Generierungssprache",
+      "storePrefSuffix": "(Shop-Einstellung)",
+      "profileDefaultSuffix": "(Profilstandard)",
+      "noPlan": "Kein aktiver Tarif — Aktionen könnten blockiert sein."
+    },
+    "table": {
+      "title": "Titel",
+      "status": "Status",
+      "updatedOn": "Aktualisiert am",
+      "noProducts": "Keine Produkte gefunden",
+      "pageOf": "Seite {page} von {total}"
+    },
+    "status": {
+      "generating": "Wird generiert...",
+      "created": "Erstellt",
+      "failed": "Fehlgeschlagen",
+      "notCreated": "Nicht erstellt"
+    },
+    "buttons": {
+      "previous": "Zurück",
+      "next": "Weiter",
+      "generating": "Wird generiert…",
+      "generateSelected": "Auswahl generieren"
+    },
+    "modal": {
+      "title": "Produktdetails",
+      "fields": {
+        "id": "ID",
         "title": "Titel",
         "status": "Status",
-        "updatedOn": "Aktualisiert am",
-        "noProducts": "Keine Produkte gefunden",
-        "pageOf": "Seite {page} von {total}"
+        "updatedAt": "Aktualisiert am"
       },
-      "status": {
-        "generating": "Wird generiert...",
-        "created": "Erstellt",
-        "failed": "Fehlgeschlagen",
-        "notCreated": "Nicht erstellt"
+      "noProduct": "Kein Produkt ausgewählt."
+    },
+    "alerts": {
+      "selectAny": "Wähle mindestens ein Produkt aus.",
+      "noStore": "Kein Shop ausgewählt",
+      "loadingLang": "Bitte warten, Spracheinstellungen werden geladen…",
+      "usageCap": "⚠️ Nutzungslimit erreicht. Verbraucht: {used}, Limit: {limit}.",
+      "batchSuccess": "Texte fuer {count} Produkt(e) erstellt."
+    },
+    "errors": {
+      "generic": "Etwas ist schiefgelaufen"
+    },
+    "lang": {
+      "en": "Englisch",
+      "es": "Spanisch",
+      "fr": "Französisch",
+      "de": "Deutsch",
+      "it": "Italienisch",
+      "pt": "Portugiesisch",
+      "nl": "Niederländisch"
+    }
+  },
+  "billing": {
+    "header": {
+      "title": "Wähle deinen Tarif",
+      "subtitle": "Wähle den Tarif, der zu deinem Shop passt."
+    },
+    "activeStore": "Aktiver Shop:",
+    "plans": {
+      "free": {
+        "name": "Free",
+        "price": "$0",
+        "description": "Für Tests und kleine Shops",
+        "features": [
+          "Bis zu 10 Produkte generieren",
+          "Nur ein Shop",
+          "Basissupport"
+        ]
       },
-      "buttons": {
-        "previous": "Zurück",
-        "next": "Weiter",
-        "generating": "Wird generiert…",
-        "generateSelected": "Auswahl generieren"
+      "basic": {
+        "name": "Basic",
+        "price": "$12 /Monat",
+        "description": "Für wachsende Shops",
+        "features": [
+          "Bis zu 100 Produkte generieren",
+          "Nur ein Shop",
+          "Priorisierter Support"
+        ]
       },
-      "modal": {
-        "title": "Produktdetails",
-        "fields": {
-          "id": "ID",
-          "title": "Titel",
-          "status": "Status",
-          "updatedAt": "Aktualisiert am"
-        },
-        "noProduct": "Kein Produkt ausgewählt."
-      },
-      "alerts": {
-        "selectAny": "Wähle mindestens ein Produkt aus.",
-        "noStore": "Kein Shop ausgewählt",
-        "loadingLang": "Bitte warten, Spracheinstellungen werden geladen…",
-        "usageCap": "⚠️ Nutzungslimit erreicht. Verbraucht: {used}, Limit: {limit}."
-      },
-      "errors": { "generic": "Etwas ist schiefgelaufen" },
-      "lang": {
-        "en": "Englisch",
-        "es": "Spanisch",
-        "fr": "Französisch",
-        "de": "Deutsch",
-        "it": "Italienisch",
-        "pt": "Portugiesisch",
-        "nl": "Niederländisch"
+      "pro": {
+        "name": "Pro",
+        "price": "$32 /Monat",
+        "description": "Für Agenturen & Multi-Shop-Betreiber",
+        "features": [
+          "Bis zu 250 Produkte generieren",
+          "Unterstützung für mehrere Shops",
+          "Premium-Support"
+        ]
       }
     },
-      "billing": {
-        "header": {
-          "title": "Wähle deinen Tarif",
-          "subtitle": "Wähle den Tarif, der zu deinem Shop passt."
-        },
-        "activeStore": "Aktiver Shop:",
-        "plans": {
-          "free": {
-            "name": "Free",
-            "price": "$0",
-            "description": "Für Tests und kleine Shops",
-            "features": [
-              "Bis zu 10 Produkte generieren",
-              "Nur ein Shop",
-              "Basissupport"
-            ]
-          },
-          "basic": {
-            "name": "Basic",
-            "price": "$12 /Monat",
-            "description": "Für wachsende Shops",
-            "features": [
-              "Bis zu 100 Produkte generieren",
-              "Nur ein Shop",
-              "Priorisierter Support"
-            ]
-          },
-          "pro": {
-            "name": "Pro",
-            "price": "$32 /Monat",
-            "description": "Für Agenturen & Multi-Shop-Betreiber",
-            "features": [
-              "Bis zu 250 Produkte generieren",
-              "Unterstützung für mehrere Shops",
-              "Premium-Support"
-            ]
-          }
-        },
-        "usage": {
-          "label": "Nutzung",
-          "unlimited": "Unbegrenzt",
-          "usedOfPct": "{used}/{total} ({pct}%)"
-        },
-        "buttons": {
-          "subscribe": "Abonnieren",
-          "active": "Aktiv",
-          "processing": "Wird verarbeitet...",
-          "switchPlan": "Tarif wechseln…",
-          "cancel": "Kündigen",
-          "keepCurrent": "Aktuellen Tarif behalten",
-          "cancelAndContinue": "Aktuellen kündigen & fortfahren"
-        },
-        "free": {
-          "usedBadge": "Verbraucht ({limit}/{limit})",
-          "usedOnceNote": "Du hast den Free-Tarif bereits genutzt."
-        },
-        "confirm": {
-          "title": "Tarif wechseln?",
-          "body": "Du hast derzeit {current} aktiv. Um zu {target} zu wechseln, musst du zuerst deinen aktuellen Tarif kündigen."
-        },
-        "errors": {
-          "stores": "Shops konnten nicht geladen werden",
-          "subscription": "Abo konnte nicht geladen werden",
-          "cancelFailed": "Kündigung fehlgeschlagen",
-          "generic": "Etwas ist schiefgelaufen"
-        },
-        "alerts": {
-          "freeOnce": "Du hast den Free-Tarif bereits genutzt. Er kann nur einmal im Leben aktiviert werden.",
-          "freeActivated": "✅ Free-Tarif aktiviert!",
-          "cancelled": "{plan}-Abonnement gekündigt"
-        }
-      },
-        "settings": {
-          "header": {
-            "title": "Einstellungen"
-          },
-          "profile": {
-            "title": "Profil",
-            "subtitle": "Verwalte deine E-Mail, dein Avatar und dein Theme.",
-            "avatarAlt": "Avatar",
-            "noAvatar": "Kein Avatar",
-            "changeAvatar": "Avatar ändern",
-            "upload": "Hochladen"
-          },
-          "fields": {
-            "email": "E-Mail",
-            "theme": "Theme",
-            "defaultLanguage": "Standardsprache (Fallback)"
-          },
-          "theme": {
-            "system": "System",
-            "light": "Hell",
-            "dark": "Dunkel"
-          },
-          "langs": {
-            "en": "Englisch",
-            "es": "Spanisch",
-            "fr": "Französisch",
-            "de": "Deutsch",
-            "it": "Italienisch",
-            "pt": "Portugiesisch",
-            "nl": "Niederländisch"
-          },
-          "buttons": {
-            "save": "Speichern",
-            "saving": "Speichern…"
-          },
-          "stores": {
-            "title": "Shop-Sprachen",
-            "empty": "Keine Shops verbunden.",
-            "storeId": "Shop-ID"
-          },
-          "placeholders": {
-            "theme": "Theme wählen",
-            "language": "Sprache wählen"
-          },
-          "alerts": {
-            "uploadFailed": "Upload fehlgeschlagen",
-            "profileSaved": "✅ Profil gespeichert",
-            "storeLangFailed": "Shop-Sprache konnte nicht gespeichert werden"
-          },
-          "errors": {
-            "loadProfile": "Profil konnte nicht geladen werden",
-            "loadStores": "Shops konnten nicht geladen werden",
-            "loadStorePrefs": "Shop-Einstellungen konnten nicht geladen werden",
-            "loadSettings": "Einstellungen konnten nicht geladen werden",
-            "saveFailed": "Speichern fehlgeschlagen"
-          }
-        }      
+    "usage": {
+      "label": "Nutzung",
+      "unlimited": "Unbegrenzt",
+      "usedOfPct": "{used}/{total} ({pct}%)"
+    },
+    "buttons": {
+      "subscribe": "Abonnieren",
+      "active": "Aktiv",
+      "processing": "Wird verarbeitet...",
+      "switchPlan": "Tarif wechseln…",
+      "cancel": "Kündigen",
+      "keepCurrent": "Aktuellen Tarif behalten",
+      "cancelAndContinue": "Aktuellen kündigen & fortfahren"
+    },
+    "free": {
+      "usedBadge": "Verbraucht ({limit}/{limit})",
+      "usedOnceNote": "Du hast den Free-Tarif bereits genutzt."
+    },
+    "confirm": {
+      "title": "Tarif wechseln?",
+      "body": "Du hast derzeit {current} aktiv. Um zu {target} zu wechseln, musst du zuerst deinen aktuellen Tarif kündigen."
+    },
+    "errors": {
+      "stores": "Shops konnten nicht geladen werden",
+      "subscription": "Abo konnte nicht geladen werden",
+      "cancelFailed": "Kündigung fehlgeschlagen",
+      "generic": "Etwas ist schiefgelaufen"
+    },
+    "alerts": {
+      "freeOnce": "Du hast den Free-Tarif bereits genutzt. Er kann nur einmal im Leben aktiviert werden.",
+      "freeActivated": "✅ Free-Tarif aktiviert!",
+      "cancelled": "{plan}-Abonnement gekündigt"
+    }
+  },
+  "settings": {
+    "header": {
+      "title": "Einstellungen"
+    },
+    "profile": {
+      "title": "Profil",
+      "subtitle": "Verwalte deine E-Mail, dein Avatar und dein Theme.",
+      "avatarAlt": "Avatar",
+      "noAvatar": "Kein Avatar",
+      "changeAvatar": "Avatar ändern",
+      "upload": "Hochladen"
+    },
+    "fields": {
+      "email": "E-Mail",
+      "theme": "Theme",
+      "defaultLanguage": "Standardsprache (Fallback)"
+    },
+    "theme": {
+      "system": "System",
+      "light": "Hell",
+      "dark": "Dunkel"
+    },
+    "langs": {
+      "en": "Englisch",
+      "es": "Spanisch",
+      "fr": "Französisch",
+      "de": "Deutsch",
+      "it": "Italienisch",
+      "pt": "Portugiesisch",
+      "nl": "Niederländisch"
+    },
+    "buttons": {
+      "save": "Speichern",
+      "saving": "Speichern…"
+    },
+    "stores": {
+      "title": "Shop-Sprachen",
+      "empty": "Keine Shops verbunden.",
+      "storeId": "Shop-ID"
+    },
+    "placeholders": {
+      "theme": "Theme wählen",
+      "language": "Sprache wählen"
+    },
+    "alerts": {
+      "uploadFailed": "Upload fehlgeschlagen",
+      "profileSaved": "✅ Profil gespeichert",
+      "storeLangFailed": "Shop-Sprache konnte nicht gespeichert werden"
+    },
+    "errors": {
+      "loadProfile": "Profil konnte nicht geladen werden",
+      "loadStores": "Shops konnten nicht geladen werden",
+      "loadStorePrefs": "Shop-Einstellungen konnten nicht geladen werden",
+      "loadSettings": "Einstellungen konnten nicht geladen werden",
+      "saveFailed": "Speichern fehlgeschlagen"
+    }
+  }
 }
