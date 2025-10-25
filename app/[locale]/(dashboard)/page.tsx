@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -41,6 +41,50 @@ type Product = {
   aiDescription?: string | null;
   aiMetaDescription?: string | null;
   aiTags?: string | null;
+};
+
+/** Colorful, trustworthy status badge (no extra deps) */
+function Badge({
+  children,
+  color = "slate",
+  className = "",
+}: {
+  children: React.ReactNode;
+  color?: "slate" | "green" | "blue" | "amber" | "red";
+  className?: string;
+}) {
+  const map: Record<string, string> = {
+    slate:
+      "bg-slate-100 text-slate-800 ring-1 ring-inset ring-slate-200",
+    green:
+      "bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-200",
+    blue:
+      "bg-indigo-50 text-indigo-700 ring-1 ring-inset ring-indigo-200",
+    amber:
+      "bg-amber-50 text-amber-800 ring-1 ring-inset ring-amber-200",
+    red:
+      "bg-rose-50 text-rose-700 ring-1 ring-inset ring-rose-200",
+  };
+  return (
+    <span
+      className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium ${map[color]} ${className}`}
+    >
+      {children}
+    </span>
+  );
+}
+
+const statusColor: Record<
+  Product["status"],
+  Parameters<typeof Badge>[0]["color"]
+> = {
+  idle: "slate",
+  generating: "amber",
+  done: "blue",
+  failed: "red",
+  draft: "slate",
+  active: "green",
+  published: "blue",
 };
 
 export default function DashboardPage() {
@@ -300,18 +344,24 @@ export default function DashboardPage() {
 
   // ---------- UI bits ----------
   const SectionTitle = ({ children }: { children: React.ReactNode }) => (
-    <h2 className="text-lg font-semibold mb-2">{children}</h2>
+    <h2 className="text-base font-semibold tracking-tight text-slate-900">
+      {children}
+    </h2>
+  );
+
+  const SectionHint = ({ children }: { children: React.ReactNode }) => (
+    <p className="text-[12px] text-slate-600">{children}</p>
   );
 
   const SkeletonRow = () => (
-    <div className="rounded-lg border p-3 animate-pulse">
-      <div className="h-4 w-1/3 bg-gray-200 rounded mb-2" />
-      <div className="h-3 w-5/6 bg-gray-200 rounded" />
+    <div className="rounded-xl border p-3 animate-pulse bg-white/60">
+      <div className="h-4 w-1/3 bg-slate-200 rounded mb-2" />
+      <div className="h-3 w-5/6 bg-slate-100 rounded" />
     </div>
   );
 
   const ProductsSkeleton = () => (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {Array.from({ length: 4 }).map((_, i) => (
         <SkeletonRow key={i} />
       ))}
@@ -319,18 +369,23 @@ export default function DashboardPage() {
   );
 
   return (
-    <div className="grid grid-cols-12 gap-6 p-6">
+    <div className="grid grid-cols-12 gap-6 p-4 md:p-6 bg-gradient-to-br from-[#F4F7FF] via-[#F8FAFF] to-[#F2F7FF] rounded-2xl">
       {/* Left */}
-      <div className="col-span-8 space-y-4">
-        <Card className="p-4">
-          <div className="flex items-center justify-between mb-2">
-            <SectionTitle>{t("quickGenerate.title")}</SectionTitle>
+      <div className="col-span-12 lg:col-span-8 space-y-4">
+        <Card className="p-4 sm:p-5 bg-white/95 border-indigo-100 shadow-sm">
+          <div className="flex items-center justify-between mb-3">
+            <div>
+              <SectionTitle>{t("quickGenerate.title")}</SectionTitle>
+              <SectionHint>
+                {t("quickGenerate.syncTooltip")}
+              </SectionHint>
+            </div>
             <Button
               variant="ghost"
               size="sm"
               onClick={syncFromShopify}
               disabled={!selectedStore || syncing}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 rounded-full hover:bg-indigo-50 text-indigo-700"
               title={t("quickGenerate.syncTooltip")}
             >
               <RefreshCw
@@ -341,13 +396,13 @@ export default function DashboardPage() {
           </div>
 
           {/* store / product picker */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <Label className="mb-1 block">
+              <Label className="mb-1 block text-slate-800">
                 {t("quickGenerate.labels.store")}
               </Label>
               {storesLoading ? (
-                <div className="h-10 rounded-md bg-gray-100 animate-pulse" />
+                <div className="h-10 rounded-md bg-slate-100 animate-pulse" />
               ) : (
                 <Select
                   value={selectedStore}
@@ -358,7 +413,7 @@ export default function DashboardPage() {
                     setSelectedProduct("");
                   }}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="border-slate-200 focus:ring-indigo-200">
                     <SelectValue
                       placeholder={t("quickGenerate.placeholders.chooseStore")}
                     />
@@ -366,27 +421,30 @@ export default function DashboardPage() {
                   <SelectContent>
                     {stores.map((s) => (
                       <SelectItem key={s.id} value={s.id}>
-                        {s.shopDomain}
+                        <span className="truncate">{s.shopDomain}</span>
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               )}
+              <SectionHint>
+                {t("quickGenerate.placeholders.chooseStore")}
+              </SectionHint>
             </div>
 
             <div>
-              <Label className="mb-1 block">
+              <Label className="mb-1 block text-slate-800">
                 {t("quickGenerate.labels.product")}
               </Label>
               {productsLoading ? (
-                <div className="h-10 rounded-md bg-gray-100 animate-pulse" />
+                <div className="h-10 rounded-md bg-slate-100 animate-pulse" />
               ) : (
                 <Select
                   value={selectedProduct}
                   onValueChange={setSelectedProduct}
                   disabled={!products.length}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="border-slate-200 focus:ring-indigo-200">
                     <SelectValue
                       placeholder={
                         products.length
@@ -398,31 +456,46 @@ export default function DashboardPage() {
                   <SelectContent>
                     {products.map((p) => (
                       <SelectItem key={p.id} value={p.id}>
-                        {p.title}
+                        <div className="flex items-center gap-2">
+                          <span className="truncate max-w-[200px]">
+                            {p.title}
+                          </span>
+                          <Badge color={statusColor[p.status]}>
+                            {p.status}
+                          </Badge>
+                        </div>
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               )}
+              <SectionHint>{t("recent.noDescription")}</SectionHint>
             </div>
 
-            <div className="col-span-2">
-              <Label className="mb-1 block">
+            <div className="md:col-span-2">
+              <Label className="mb-1 block text-slate-800">
                 {t("quickGenerate.labels.keywords")}
               </Label>
               <Input
                 placeholder={t("quickGenerate.placeholders.keywords")}
                 value={keywords}
                 onChange={(e) => setKeywords(e.target.value)}
+                className="border-slate-200 focus-visible:ring-indigo-200"
+                aria-describedby="kw-help"
               />
+              <SectionHint>
+                <span id="kw-help">
+                  {t("labels.tags")} – comma separated for better SEO targeting
+                </span>
+              </SectionHint>
             </div>
 
             <div>
-              <Label className="mb-1 block">
+              <Label className="mb-1 block text-slate-800">
                 {t("quickGenerate.labels.tone")}
               </Label>
               <Select value={tone} onValueChange={setTone}>
-                <SelectTrigger>
+                <SelectTrigger className="border-slate-200 focus:ring-indigo-200">
                   <SelectValue placeholder={t("quickGenerate.labels.tone")} />
                 </SelectTrigger>
                 <SelectContent>
@@ -442,6 +515,8 @@ export default function DashboardPage() {
               <Button
                 onClick={handleQuickGenerate}
                 disabled={!selectedProduct || generating}
+                className="w-full md:w-auto bg-[#214D8D] hover:bg-[#1B4176] text-white shadow-sm"
+                aria-live="polite"
               >
                 {generating ? (
                   <>
@@ -454,38 +529,62 @@ export default function DashboardPage() {
               </Button>
             </div>
           </div>
+
+          {/* Visual guide strip */}
+          <div className="mt-4 rounded-xl bg-gradient-to-r from-indigo-50 to-sky-50 border border-indigo-100 p-3 text-[13px] text-slate-700">
+            <ol className="list-decimal list-inside grid gap-1 sm:grid-cols-3">
+              <li>{t("quickGenerate.labels.product")} — select a product</li>
+              <li>{t("quickGenerate.labels.tone")} — choose a tone</li>
+              <li>{t("buttons.generate")} — we’ll create SEO copy</li>
+            </ol>
+          </div>
         </Card>
 
         {/* Recent Results */}
-        <Card className="p-4">
+        <Card className="p-4 sm:p-5 bg-white/95 border-indigo-100 shadow-sm">
           <SectionTitle>{t("recent.title")}</SectionTitle>
           {recentLoading ? (
             <ProductsSkeleton />
           ) : recentResults.length === 0 ? (
-            <p className="text-sm text-gray-500">{t("recent.empty")}</p>
+            <div className="rounded-xl border border-dashed border-slate-300 p-6 text-center text-sm text-slate-600 bg-white">
+              {t("recent.empty")}
+            </div>
           ) : (
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {recentResults.map((r) => (
-                <Card key={r.id} className="p-3 flex flex-col justify-between">
+                <Card
+                  key={r.id}
+                  className="p-3 flex flex-col justify-between bg-white/95 ring-1 ring-indigo-50 hover:ring-indigo-100 transition"
+                >
                   <div>
-                    <h3 className="font-medium">{r.title}</h3>
-                    <p className="text-xs text-gray-500 mt-1">
-                      {new Date(r.updatedAt).toLocaleString()}
-                    </p>
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <h3
+                          className="font-medium truncate text-slate-900"
+                          title={r.title}
+                        >
+                          {r.title}
+                        </h3>
+                        <p className="text-[11px] text-slate-500 mt-0.5">
+                          {new Date(r.updatedAt).toLocaleString()}
+                        </p>
+                      </div>
+                      <Badge color={statusColor[r.status]}>{r.status}</Badge>
+                    </div>
 
                     {r.aiDescription ? (
-                      <p className="text-sm text-gray-700 line-clamp-4 mt-2">
+                      <p className="text-sm text-slate-700 line-clamp-4 mt-2">
                         {r.aiDescription}
                       </p>
                     ) : (
-                      <p className="text-sm text-gray-500 mt-2">
+                      <p className="text-sm text-slate-500 mt-2">
                         {t("recent.noDescription")}
                       </p>
                     )}
 
                     {r.aiTags && (
-                      <p className="text-xs text-gray-400 mt-2">
-                        <span className="font-medium text-gray-500">
+                      <p className="text-xs text-slate-600 mt-2">
+                        <span className="font-medium text-slate-700">
                           {t("labels.tags")}
                         </span>{" "}
                         {r.aiTags}
@@ -500,6 +599,7 @@ export default function DashboardPage() {
                       onClick={() => handleCopy(r.aiDescription || "")}
                       disabled={!r.aiDescription}
                       title={t("tooltips.copyDescription")}
+                      className="rounded-full border-slate-300 hover:bg-indigo-50 hover:text-indigo-800"
                     >
                       <Copy className="w-4 h-4" />
                     </Button>
@@ -507,6 +607,7 @@ export default function DashboardPage() {
                       size="sm"
                       variant="outline"
                       onClick={() => handleExpand(r)}
+                      className="rounded-full border-slate-300 hover:bg-indigo-50 hover:text-indigo-800"
                     >
                       <Maximize2 className="w-4 h-4" />
                     </Button>
@@ -519,25 +620,46 @@ export default function DashboardPage() {
       </div>
 
       {/* Right */}
-      <div className="col-span-4 space-y-4">
-        <Card className="p-4">
+      <div className="col-span-12 lg:col-span-4 space-y-4">
+        <Card className="p-4 sm:p-5 bg-white/95 border-indigo-100 shadow-sm">
           <SectionTitle>{t("activity.title")}</SectionTitle>
+          <SectionHint>Live log of imports, generations, and edits</SectionHint>
           {activitiesLoading ? (
-            <div className="space-y-2">
+            <div className="space-y-2 mt-2">
               {Array.from({ length: 5 }).map((_, i) => (
                 <div
                   key={i}
-                  className="h-4 w-full bg-gray-100 rounded animate-pulse"
+                  className="h-4 w-full bg-slate-100 rounded animate-pulse"
                 />
               ))}
             </div>
           ) : activities.length === 0 ? (
-            <p className="text-sm text-gray-500">{t("activity.empty")}</p>
+            <div className="rounded-xl border border-dashed border-slate-300 p-6 text-center text-sm text-slate-600 bg-white mt-2">
+              {t("activity.empty")}
+            </div>
           ) : (
-            <ul className="space-y-2 text-sm max-h-64 overflow-y-auto pr-1">
+            <ul className="space-y-2 text-sm max-h-64 overflow-y-auto pr-1 mt-2">
               {activities.map((a) => (
-                <li key={a.id}>
-                  <span className="font-medium">{a.type}</span> — {a.message}
+                <li
+                  key={a.id}
+                  className="flex items-start gap-2 rounded-md hover:bg-indigo-50/60 p-2"
+                >
+                  <span className="mt-0.5 text-indigo-600">•</span>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium text-slate-900">
+                        {a.type}
+                      </span>
+                      <span className="text-[11px] text-slate-500">
+                        {a.createdAt
+                          ? new Date(a.createdAt).toLocaleString()
+                          : ""}
+                      </span>
+                    </div>
+                    <div className="text-slate-700 break-words">
+                      {a.message}
+                    </div>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -549,25 +671,29 @@ export default function DashboardPage() {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>{t("modal.title")}</DialogTitle>
+            <DialogTitle className="text-slate-900">
+              {t("modal.title")}
+            </DialogTitle>
           </DialogHeader>
 
           {selectedResult && (
             <div className="space-y-4">
               <div>
-                <Label className="mb-1 block">{t("modal.labels.title")}</Label>
+                <Label className="mb-1 block text-slate-800">
+                  {t("modal.labels.title")}
+                </Label>
                 <Input value={selectedResult.title} disabled />
               </div>
 
               <div>
                 <div className="flex items-center justify-between">
-                  <Label className="mb-1 block">
+                  <Label className="mb-1 block text-slate-800">
                     {t("modal.labels.description")}
                   </Label>
                   <Button
                     size="sm"
                     variant="ghost"
-                    className="gap-2"
+                    className="gap-2 text-indigo-700 hover:bg-indigo-50"
                     onClick={() => handleCopy(editedDescription)}
                     disabled={!editedDescription}
                   >
@@ -580,15 +706,19 @@ export default function DashboardPage() {
                   rows={6}
                   placeholder={t("modal.placeholders.description")}
                 />
+                <SectionHint>120–180 words reads best.</SectionHint>
               </div>
 
               <div>
                 <div className="flex items-center justify-between">
-                  <Label className="mb-1 block">{t("modal.labels.meta")}</Label>
+                  <Label className="mb-1 block text-slate-800">
+                    {t("modal.labels.meta")}
+                  </Label>
                   <span
                     className={`text-xs ${
-                      metaLength > 160 ? "text-red-600" : "text-gray-500"
+                      metaLength > 160 ? "text-rose-600" : "text-slate-500"
                     }`}
+                    aria-live="polite"
                   >
                     {metaLength}/160
                   </span>
@@ -599,26 +729,34 @@ export default function DashboardPage() {
                   rows={3}
                   placeholder={t("modal.placeholders.meta")}
                 />
+                <SectionHint>
+                  Search engines typically truncate after ~160 characters.
+                </SectionHint>
               </div>
 
               <div>
-                <Label className="mb-1 block">{t("modal.labels.tags")}</Label>
+                <Label className="mb-1 block text-slate-800">
+                  {t("modal.labels.tags")}
+                </Label>
                 <Input
                   value={editedTags}
                   onChange={(e) => setEditedTags(e.target.value)}
                   placeholder={t("modal.placeholders.tags")}
                 />
+                <SectionHint>Example: “winter, waterproof, lightweight”.</SectionHint>
               </div>
 
               <div>
-                <Label className="mb-1 block">{t("modal.labels.status")}</Label>
+                <Label className="mb-1 block text-slate-800">
+                  {t("modal.labels.status")}
+                </Label>
                 <Select
                   value={editedStatus}
                   onValueChange={(v) =>
                     setEditedStatus(v as "draft" | "active" | "published")
                   }
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="border-slate-200 focus:ring-indigo-200">
                     <SelectValue placeholder={t("modal.placeholders.status")} />
                   </SelectTrigger>
                   <SelectContent>
@@ -638,10 +776,15 @@ export default function DashboardPage() {
               variant="outline"
               onClick={() => setOpen(false)}
               disabled={saving}
+              className="border-slate-300 hover:bg-slate-50"
             >
               {t("buttons.cancel")}
             </Button>
-            <Button onClick={handleSave} disabled={saving}>
+            <Button
+              onClick={handleSave}
+              disabled={saving}
+              className="bg-[#214D8D] hover:bg-[#1B4176] text-white"
+            >
               {saving ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin mr-2" />{" "}

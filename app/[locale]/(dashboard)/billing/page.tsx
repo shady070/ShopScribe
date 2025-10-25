@@ -193,13 +193,16 @@ export default function BillingPage() {
   const ProgressBar = ({ used, total }: { used: number; total: number }) => {
     const pct = total > 0 ? Math.min(100, Math.round((used / total) * 100)) : 0;
     return (
-      <div className="mt-2">
-        <div className="flex justify-between text-xs text-gray-600 mb-1">
+      <div className="mt-3">
+        <div className="flex justify-between text-xs text-slate-600 mb-1">
           <span>{t("usage.label")}</span>
           <span>{t("usage.usedOfPct", { used, total, pct })}</span>
         </div>
-        <div className="w-full h-2 rounded-full bg-gray-200 overflow-hidden">
-          <div className="h-2 rounded-full bg-green-500" style={{ width: `${pct}%` }} />
+        <div className="w-full h-2 rounded-full bg-slate-200 overflow-hidden">
+          <div
+            className="h-2 rounded-full bg-gradient-to-r from-indigo-500 to-sky-500"
+            style={{ width: `${pct}%` }}
+          />
         </div>
       </div>
     );
@@ -308,34 +311,48 @@ export default function BillingPage() {
 
   // Skeleton card
   const SkeletonCard = () => (
-    <div className="rounded-2xl border border-gray-200 p-8 shadow-sm animate-pulse">
-      <div className="h-6 w-32 bg-gray-200 rounded mb-3" />
-      <div className="h-8 w-40 bg-gray-200 rounded mb-4" />
-      <div className="h-4 w-full bg-gray-200 rounded mb-6" />
+    <div className="rounded-2xl border border-indigo-100 p-8 shadow-sm animate-pulse bg-white/70">
+      <div className="h-6 w-32 bg-slate-200 rounded mb-3" />
+      <div className="h-8 w-40 bg-slate-200 rounded mb-4" />
+      <div className="h-4 w-full bg-slate-200 rounded mb-6" />
       <div className="space-y-2 mb-6">
-        <div className="h-4 w-5/6 bg-gray-200 rounded" />
-        <div className="h-4 w-4/6 bg-gray-200 rounded" />
-        <div className="h-4 w-3/6 bg-gray-200 rounded" />
+        <div className="h-4 w-5/6 bg-slate-200 rounded" />
+        <div className="h-4 w-4/6 bg-slate-200 rounded" />
+        <div className="h-4 w-3/6 bg-slate-200 rounded" />
       </div>
-      <div className="h-10 w-full bg-gray-300 rounded" />
+      <div className="h-10 w-full bg-slate-300 rounded" />
     </div>
   );
 
   return (
-    <div className="max-w-5xl mx-auto py-16 px-6">
-      <h1 className="text-4xl font-bold text-center mb-4">{t("header.title")}</h1>
-      <p className="text-center text-gray-500 mb-6">{t("header.subtitle")}</p>
+    <div className="max-w-5xl mx-auto py-10 md:py-16 px-4 md:px-6">
+      {/* Header */}
+      <div className="rounded-2xl bg-gradient-to-r from-indigo-50 to-sky-50 border border-indigo-100 p-5 md:p-6 mb-6">
+        <h1 className="text-2xl md:text-4xl font-bold text-slate-900 mb-2">
+          {t("header.title")}
+        </h1>
+        <p className="text-slate-600">{t("header.subtitle")}</p>
+      </div>
 
+      {/* Active store note */}
       {stores.length > 1 && (
-        <p className="text-center text-sm text-gray-500 mb-8">
+        <p className="text-center text-sm text-slate-600 mb-8">
           {t("activeStore")}{" "}
-          <b>{stores.find((s) => s.id === selectedStoreId)?.shopDomain || "—"}</b>
+          <b className="text-indigo-700">
+            {stores.find((s) => s.id === selectedStoreId)?.shopDomain || "—"}
+          </b>
         </p>
       )}
 
-      {error && <p className="text-red-500 text-center mb-6">{error}</p>}
+      {/* Error */}
+      {error && (
+        <div className="rounded-xl border border-rose-200 bg-rose-50 text-rose-700 p-3 text-sm text-center mb-6">
+          {error}
+        </div>
+      )}
 
-      <div className="grid md:grid-cols-3 gap-8">
+      {/* Plans */}
+      <div className="grid md:grid-cols-3 gap-6 md:gap-8">
         {booting ? (
           <>
             <SkeletonCard />
@@ -353,7 +370,7 @@ export default function BillingPage() {
                 ? { used: usageData.usageCount, total: usageData.limit }
                 : null;
 
-            // Only show the “Free plan already used (10/10)” banner when FREE is NOT active
+            // FREE lifetime used (only when FREE is NOT active)
             const freeUsedForever = plan.value === "FREE" && !freeEligibleEver && !isActive;
 
             // button state
@@ -380,29 +397,50 @@ export default function BillingPage() {
               <div
                 key={plan.name}
                 className={cn(
-                  "rounded-2xl shadow-lg border p-8 flex flex-col justify-between transition",
-                  isActive ? "border-green-500 shadow-green-200" : "border-gray-200"
+                  "rounded-2xl shadow-lg border p-6 md:p-8 flex flex-col justify-between transition bg-white/95",
+                  isActive
+                    ? "border-emerald-400 ring-1 ring-emerald-200"
+                    : "border-indigo-100 hover:ring-1 hover:ring-indigo-100"
                 )}
               >
                 <div>
-                  <h2 className="text-2xl font-semibold mb-2">{plan.name}</h2>
-                  <p className="text-3xl font-bold mb-2">{plan.price}</p>
-                  <p className="text-gray-500 mb-6">{plan.description}</p>
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <h2 className="text-xl md:text-2xl font-semibold text-slate-900">
+                        {plan.name}
+                      </h2>
+                      <p className="text-2xl md:text-3xl font-bold text-slate-900 mt-1">
+                        {plan.price}
+                      </p>
+                    </div>
+
+                    {/* Active badge */}
+                    {isActive && (
+                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-200">
+                        {t("buttons.active")}
+                      </span>
+                    )}
+                  </div>
+
+                  <p className="text-slate-600 mt-3 mb-5">{plan.description}</p>
+
                   <ul className="space-y-2 mb-6">
                     {plan.features.map((f) => (
-                      <li key={f} className="flex items-center gap-2 text-gray-700">
-                        <span className="w-2 h-2 rounded-full bg-green-500" />
+                      <li key={f} className="flex items-center gap-2 text-slate-800">
+                        <span className="w-2 h-2 rounded-full bg-indigo-500" />
                         {f}
                       </li>
                     ))}
                   </ul>
 
-                  {activeUsage && <ProgressBar used={activeUsage.used} total={activeUsage.total} />}
+                  {activeUsage && (
+                    <ProgressBar used={activeUsage.used} total={activeUsage.total} />
+                  )}
 
-                  {/* FREE lifetime used: full 10/10 bar (only when FREE is NOT active) */}
+                  {/* FREE lifetime used bar (when FREE is NOT active) */}
                   {freeUsedForever && (
-                    <div className="mt-2">
-                      <div className="flex justify-between text-xs text-gray-600 mb-1">
+                    <div className="mt-3">
+                      <div className="flex justify-between text-xs text-slate-600 mb-1">
                         <span>{t("usage.label")}</span>
                         <span>
                           {t("usage.usedOfPct", {
@@ -412,10 +450,10 @@ export default function BillingPage() {
                           })}
                         </span>
                       </div>
-                      <div className="w-full h-2 rounded-full bg-gray-200 overflow-hidden">
-                        <div className="h-2 rounded-full bg-gray-500" style={{ width: `100%` }} />
+                      <div className="w-full h-2 rounded-full bg-slate-200 overflow-hidden">
+                        <div className="h-2 rounded-full bg-slate-400" style={{ width: `100%` }} />
                       </div>
-                      <p className="text-xs text-gray-500 mt-2">{t("free.usedOnceNote")}</p>
+                      <p className="text-xs text-slate-500 mt-2">{t("free.usedOnceNote")}</p>
                     </div>
                   )}
                 </div>
@@ -426,7 +464,9 @@ export default function BillingPage() {
                     disabled={disabled}
                     className={cn(
                       "w-full py-3 rounded-xl font-semibold transition",
-                      disabled ? "bg-gray-400 cursor-not-allowed" : "bg-black text-white hover:bg-gray-800"
+                      disabled
+                        ? "bg-slate-300 text-slate-600 cursor-not-allowed"
+                        : "bg-[#214D8D] text-white hover:bg-[#1B4176] shadow-sm"
                     )}
                   >
                     {buttonText}
@@ -436,14 +476,14 @@ export default function BillingPage() {
                     <button
                       onClick={() => handleCancel(plan.value)}
                       disabled={!!loading}
-                      className="w-full py-2 rounded-xl font-semibold border border-red-500 text-red-500 hover:bg-red-50 transition"
+                      className="w-full py-2 rounded-xl font-semibold border border-rose-500 text-rose-600 hover:bg-rose-50 transition"
                     >
                       {t("buttons.cancel")}
                     </button>
                   )}
 
                   {!booting && activePlan && activePlan !== plan.value && (
-                    <p className="text-xs text-gray-500 text-center">
+                    <p className="text-xs text-slate-500 text-center">
                       {t("confirm.body", {
                         current: planName(activePlan),
                         target: plan.name,
@@ -459,10 +499,10 @@ export default function BillingPage() {
 
       {/* Confirm modal for switching */}
       {confirmOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl p-6 max-w-md w-full shadow-xl">
-            <h3 className="text-xl font-semibold mb-2">{t("confirm.title")}</h3>
-            <p className="text-gray-600 mb-4">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl p-6 max-w-md w-full shadow-xl border border-indigo-100">
+            <h3 className="text-xl font-semibold mb-2 text-slate-900">{t("confirm.title")}</h3>
+            <p className="text-slate-600 mb-4">
               {t("confirm.body", {
                 current: activePlan ? planName(activePlan) : "",
                 target: pendingPlan ? planName(pendingPlan) : "",
@@ -470,7 +510,7 @@ export default function BillingPage() {
             </p>
             <div className="flex gap-3 justify-end">
               <button
-                className="px-4 py-2 rounded-xl border"
+                className="px-4 py-2 rounded-xl border border-slate-300 hover:bg-slate-50"
                 onClick={() => {
                   setConfirmOpen(false);
                   setPendingPlan(null);
@@ -479,7 +519,7 @@ export default function BillingPage() {
                 {t("buttons.keepCurrent")}
               </button>
               <button
-                className="px-4 py-2 rounded-xl bg-red-600 text-white"
+                className="px-4 py-2 rounded-xl bg-rose-600 text-white hover:bg-rose-700"
                 onClick={async () => {
                   if (!activePlan || !selectedStoreId || !pendingPlan) return;
                   setLoading("CANCEL_THEN_SUBSCRIBE");

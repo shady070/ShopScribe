@@ -88,11 +88,14 @@
   },
   "bulk": {
     "header": {
-      "title": "Bulk Generate"
+      "title": "Bulk Generate",
+      "subtitle": "Select a store, pick products, and generate SEO-ready copy in batches."
     },
     "ui": {
       "loadingStores": "Loading stores...",
-      "selectStore": "Select Store"
+      "selectStore": "Select Store",
+      "filter": "Filter",
+      "searchPlaceholder": "Search products on this page…"
     },
     "usage": {
       "planLabel": "Plan:",
@@ -111,7 +114,9 @@
       "status": "Status",
       "updatedOn": "Updated On",
       "noProducts": "No products found",
-      "pageOf": "Page {page} of {total}"
+      "noProductsFiltered": "No products match your filter.",
+      "pageOf": "Page {page} of {total}",
+      "viewDetails": "View details"
     },
     "status": {
       "generating": "Generating...",
@@ -123,7 +128,12 @@
       "previous": "Previous",
       "next": "Next",
       "generating": "Generating…",
-      "generateSelected": "Generate Selected"
+      "generateSelected": "Generate Selected",
+      "clearSelection": "Clear selection"
+    },
+    "selection": {
+      "someSelected": "{count} selected",
+      "allOnPageSelected": "All {count} on this page selected"
     },
     "modal": {
       "title": "Product Details",
